@@ -6,6 +6,36 @@ import getpass
 
 # TODO: SET UP LOGGER FROM CONFIG
 
+CONFIG_TEMPLATE = """
+# Define default configuration for environment, including any common/standard
+# treatments, enrollments, measures, and attributes.
+
+# ----------------------- BEGIN TEMPLATE -----------------------
+
+[core]
+abracadabra_home={ABRACADABRA_HOME}
+
+# Logging level
+logging_level=INFO
+
+# Default experiment values, used to reduce parameter
+# footprint for common Experiment instantiations
+[experiment]
+control=control
+treatment=treatment
+enrollment=enrollment
+measures=metric
+attributes=attr_0,attr_1
+
+[constants]:
+default_alpha=.05
+min_obs_for_z=30
+
+[stan]:
+model_cache={ABRACADABRA_HOME}/compiled_stan_models/
+default_bayesian_inference_method=sample
+"""
+
 TEMPLATE_BEGIN_PATTERN = (
     '# ----------------------- BEGIN TEMPLATE -----------------------')
 
@@ -28,11 +58,6 @@ def expand_env_var(env_var):
             return interpolated
         else:
             env_var = interpolated
-
-
-# load template, for constructing config files
-with open(os.path.join(os.path.dirname(__file__), 'config_template.cfg')) as f:
-    DEFAULT_CONFIG = f.read()
 
 
 def render_config_template(template):
@@ -100,7 +125,7 @@ else:
 if not os.path.isfile(ABRACADABRA_CONFIG):
     logging.info(f'Creating new Abracadabra config file in: {ABRACADABRA_CONFIG}')
     with open(ABRACADABRA_CONFIG, 'w') as f:
-        cfg = render_config_template(DEFAULT_CONFIG)
+        cfg = render_config_template(CONFIG_TEMPLATE)
         f.write(cfg.split(TEMPLATE_BEGIN_PATTERN)[-1].strip())
 
 
@@ -170,7 +195,6 @@ def search_config(df, section, key):
     available = [available] if not isinstance(available, list) else available
     columns = df.columns
     return [c for c in columns if c in available]
-
 
 
 DEFAULT_ALPHA = get('constants', 'default_alpha')
