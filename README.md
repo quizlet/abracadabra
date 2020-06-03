@@ -2,6 +2,67 @@
 
 Makes AB testing analyses magically simple!
 
+## Temporary setup for Analysts
+
+This section outlines how to set up ✨abracadabra✨ in a separate environment for testing and going through demos before we publish the repo on PyPI. Note that once we get the go-ahead from T&S to open source the project, this entire process will be replaced with `pip install abracadabra`, but for now, please continue on...
+
+#### Using the correct python version
+✨abracadabra✨ is tested on python 3.7, so you'll need to make sure you're using the `3.7.0` runtime. First make sure that you have the `pyenv` package by running.
+
+```bash
+$ pyenv versions
+system
+2.7.15
+2.7.16
+* 3.7.0
+```
+
+This will list the versions of python on your machine. If you do not have `pyenv`, you'll need to install it via:
+
+```bash
+brew update
+brew install pyenv
+```
+
+If version `3.7.0` is available, then great! Otherwise, you'll need to install it:
+
+`pyenv install 3.7.0`
+
+#### Set up a `virtualenv` for testing
+Now (make and) go to a directory that you want to use to test ✨abracadabra✨. 
+
+```bash
+mkdir /tmp/test_abra && cd /tmp/test_abra
+```
+
+From there set the local python runtime.
+
+```bash
+pyenv local 3.7.0
+```
+
+Now make a virtual environment to install and test ✨abracadabra✨, then activate the `virtualenv`:
+
+```bash
+virtualenv abracadabra
+source abracadabra/bin/activate
+```
+
+#### Install ✨abracadabra✨ and play
+We can now install from Quizlet's github repo via.
+
+```bash
+pip install git+https://github.com/quizlet/abracadabra.git
+```
+
+This should have you up and running! Try it out by running the following example in fresh IPython shell. Once you're finished with that, try out the [`docs/abracadabra_basics.ipynb`](./docs/abracadabra_basics.ipynb) notebook, which gives a more in-depth look at all of ✨abracadabra✨'s components and features.
+
+```bash
+ipython
+```
+
+
+
 ## Example Usage
 
 ```python
