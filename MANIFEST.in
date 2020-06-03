@@ -1,0 +1,5 @@
+include NOTICE
+include LICENSE
+include CHANGELOG.txt
+include README.md
+include abra/config_template.cfg
