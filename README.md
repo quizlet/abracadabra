@@ -2,12 +2,12 @@
 
 Makes AB testing analyses magically simple!
 
-## Temporary setup for Analysts
+## Temporary testing setup
 
 This section outlines how to set up ✨abracadabra✨ in a separate environment for testing and going through demos before we publish the repo on PyPI. Note that once we get the go-ahead from T&S to open source the project, this entire process will be replaced with `pip install abracadabra`, but for now, please continue on...
 
 #### Using the correct python version
-✨abracadabra✨ is tested on python 3.7, so you'll need to make sure you're using the `3.7.0` runtime. First make sure that you have the `pyenv` package by running.
+✨abracadabra✨ has been tested on python >=3.7, so you'll need to make sure you're using the `3.7.0` or later runtime version. You can set the version with `pyenv`. First make sure that you have the `pyenv` package by running.
 
 ```bash
 $ pyenv versions
@@ -35,7 +35,7 @@ Now (make and) go to a directory that you want to use to test ✨abracadabra✨.
 mkdir /tmp/test_abra && cd /tmp/test_abra
 ```
 
-From there set the local python runtime.
+From there set the local python runtime version.
 
 ```bash
 pyenv local 3.7.0
@@ -48,19 +48,14 @@ virtualenv abracadabra
 source abracadabra/bin/activate
 ```
 
-#### Install ✨abracadabra✨ and play
-We can now install from Quizlet's github repo via.
+#### Install and play
+We can now install ✨abracadabra✨ from Quizlet's github repo via.
 
 ```bash
 pip install git+https://github.com/quizlet/abracadabra.git
 ```
 
-This should have you up and running! Try it out by running the following example in fresh IPython shell. Once you're finished with that, try out the [`docs/abracadabra_basics.ipynb`](./docs/abracadabra_basics.ipynb) notebook, which gives a more in-depth look at all of ✨abracadabra✨'s components and features.
-
-```bash
-ipython
-```
-
+This should have you up and running! Try it out by running the following **Example Usage**  section in a fresh IPython shell, or Jupyter notebook if you want to be able to render the visualizations. Once you're finished with that, try out the [`docs/abracadabra_basics.ipynb`](./docs/abracadabra_basics.ipynb) notebook, which gives a more in-depth look at all of ✨abracadabra✨'s components and features.
 
 
 ## Example Usage
