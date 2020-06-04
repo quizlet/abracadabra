@@ -59,7 +59,7 @@ class Pdf(Plottable):
         raise NotImplementedError("Implement Me")
 
     def get_series(self):
-        xs = self.xgrid()
+        xs = self.xgrid().flatten()
         ys = self.density(xs)
         return xs, ys
 
@@ -215,7 +215,7 @@ def plot_interval(
     plt.plot(middle, y, 'o', color=color, markersize=10)
 
     if display_text:
-        label = "{} ({}, {})".format(round(middle, 2), round(left, 2), round(right, 2))
+        label = "{}\n({}, {})".format(round(middle, 2), round(left, 2), round(right, 2))
         plt.text(middle, text_y, label, ha='center', fontsize=14)
 
 
@@ -263,6 +263,7 @@ def visualize_gaussian_results(results, figsize=(15, 10), outfile=None, *args, *
     raise_y(axs[0])
     plt.gca().get_yaxis().set_ticks([])
     plt.title("Sample Comparison")
+    x_min, x_max = plt.xlim()
 
     plt.sca(axs[1])
     plot_interval(
@@ -279,8 +280,8 @@ def visualize_gaussian_results(results, figsize=(15, 10), outfile=None, *args, *
         display_text=True,
         label=results.variation.name
     )
-    # plt.grid()
     plt.legend()
+    plt.xlim(x_min, x_max)
     plt.gca().get_yaxis().set_ticks([])
     plt.title("Mean +/- Standard Error")
 
