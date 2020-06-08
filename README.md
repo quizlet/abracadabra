@@ -49,11 +49,18 @@ source abracadabra/bin/activate
 ```
 
 #### Install and play
-We can now install ✨abracadabra✨ from Quizlet's github repo via.
+We can now install ✨abracadabra✨ from [test.pypi.org](https://test.pypi.org/project/abracadabra/0.0.2/)
+
+```bash
+pip install --index-url https://test.pypi.org/simple/ abracadabra --extra-index-url https://pypi.org/simple
+```
+
+...or from Quizlet's github repo via.
 
 ```bash
 pip install git+https://github.com/quizlet/abracadabra.git
 ```
+
 
 This should have you up and running! Try it out by running the following **Example Usage**  section in a fresh IPython shell, or Jupyter notebook if you want to be able to render the visualizations. Once you're finished with that, try out the [`docs/abracadabra_basics.ipynb`](./docs/abracadabra_basics.ipynb) notebook, which gives a more in-depth look at all of ✨abracadabra✨'s components and features.
 
@@ -142,7 +149,7 @@ Test Results:
 ab_test_results.visualize(outfile="./images/proportions_delta_example.png")
 ```
 
-![`proportions_delta` inference method](./images/proportions_delta_example.png)
+![`proportions_delta` inference method](https://github.com/quizlet/abracadabra/blob/master/images/proportions_delta_example.png)
 
 ## Bayesian AB Tests
 
@@ -189,7 +196,8 @@ Test Results:
 
 # Visualize Bayesian AB test results, including samples from the model
 bayesian_ab_test_results.visualize(outfile="./images/beta_binomial_example.png")
-```
-![`beta_binomial` inference method](./images/beta_binomial_example.png)
 
-For additional examples see [`docs/abracadabra_basics.ipynb`](./docs/abracadabra_basics.ipynb)
+```
+![`beta_binomial` inference method](https://github.com/quizlet/abracadabra/blob/master/images/beta_binomial_example.png)
+
+For additional examples see [`docs/abracadabra_basics.ipynb`](https://github.com/quizlet/abracadabra/blob/master/docs/abracadabra_basics.ipynb)
