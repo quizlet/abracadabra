@@ -45,7 +45,6 @@ class Experiment(InitRepr):
     def __init__(
         self,
         data,
-        control=None,
         treatment=None,
         measures=None,
         attributes=None,
