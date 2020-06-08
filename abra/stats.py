@@ -89,7 +89,13 @@ def fdr_bh(fdr, p_values):
     return p_i(rank)
 
 
-def estimate_experiment_sample_sizes(delta, statistic='z', alpha=.05, power=.8, *args, **kwargs):
+def estimate_experiment_sample_sizes(
+    delta,
+    statistic='z',
+    alpha=.05,
+    power=.8,
+    *args, **kwargs
+):
     """
     Calculate the sample size required for each treatement in order to observe a
     difference of `delta` between control and variation groups, for a given setting
@@ -103,25 +109,79 @@ def estimate_experiment_sample_sizes(delta, statistic='z', alpha=.05, power=.8, 
         Either:
             - 'z' or 't' if interpreting effect size as scaled difference of means
             - 'rates_ratio' if interpreeting effect size as the ratio of means
-    alpha: float [0, 1)
+    alpha : float [0, 1)
             The assumed Type I error of the test
-    power: float [0, 1)
+    power : float [0, 1)
         The desired statistical power of the test
     *args, **kwargs
         Model-specific arguments
+
+    Returns
+    -------
+    sample_sizes : list[int]
+        The estiamated sample sizes for the control and variation treatments
+
+    Example 1: Continuous Variables
+    -------------------------------
+    # Estimate the sample size required to observe significant difference between
+    # two binomial distributions that differ by .01 in mean probability with
+    # Type I error = 0.05 (default) and Power = 0.8 (default)
+
+    prob_control = .49
+    std_control = (prob_control * (1 - prob_control))**.5  # Binomial std
+    prob_variation = std_variation = .50
+    delta = prob_variation - prob_control
+
+    print(
+        estimate_experiment_sample_sizes(
+            delta=delta,
+            statistic='z',
+            std_control=std_control,
+            std_variation=std_variation
+        )
+    )
+    # [39236, 39236]
+
+    Example 2 - Count Variables
+    ---------------------------
+    # Replicate Example 1 from Gu et al, 2008
+
+    R = 4  # ratio under alternative hypothesis
+    control_rate = .0005
+    variation_rate = R * control_rate
+    delta = variation_rate - control_rate
+
+    print(
+        estimate_experiment_sample_sizes(
+            delta,
+            statistic='rates_ratio',
+            control_rate=control_rate,
+            alpha=.05,
+            power=.9,
+            control_exposure_time=2.,
+            sample_size_ratio=.5
+        )
+    )
     """
     if statistic in ('t', 'z'):
-        return cohens_d_sample_size(alpha, power, delta, statistic, *args, **kwargs)
+        # std_control and/or std_variation are in *args, or **kwargs
+        return cohens_d_sample_size(delta, alpha, power, statistic, *args, **kwargs)
     elif statistic == 'rates_ratio':
         return ratio_sample_size(alpha, power, delta, *args, **kwargs)
     else:
         raise ValueError("Unknown statistic")
 
 
+def cohens_d(delta, std_control, std_variation=None):
+    std_variation = std_variation if std_variation else std_control
+    std_pooled = np.sqrt((std_control ** 2 + std_variation ** 2) / 2.)
+    return delta / std_pooled
+
+
 def cohens_d_sample_size(
+    delta,
     alpha,
     power,
-    delta,
     statistic,
     std_control,
     std_variation=None,
@@ -130,7 +190,7 @@ def cohens_d_sample_size(
     """
     Calculate sample size required to observe a significantly reliable difference
     between groups a and b. Assumes Cohen's d definition of effect size and an
-    enrollment ratio of 1.0 between groups a and b.
+    enrollment ratio of 1.0 between groups a and b by default.
 
     Parameters
     ----------
@@ -144,20 +204,32 @@ def cohens_d_sample_size(
         group. If not provided, we assume homogenous variances for the
         two groups.
 
+    Returns
+    -------
+    sample_sizes : list[int]
+        The estiamated sample sizes for the control and variation treatments
+
     Example
     -------
-    # Get estimate of sample size to compare two binomial distributions
+    # Get estimate of sample size required to observe a significant difference between
+    # two binomial distributions that differ by .01 in mean probability
 
     prob_control = .49
     std_control = (prob_control * (1 - prob_control))**.5  # Binomial std
     prob_variation = std_variation = .50
     delta = prob_variation - prob_control
 
-    print estimate_experiment_sample_sizes(
-        delta,
-        std_control=std_control,
-        std_variation=std_variation
+    print(
+        cohens_d_sample_size(
+            delta=delta,
+            alpha=.05,
+            power=.8,
+            statistic='z',
+            std_control=std_control,
+            std_variation=std_variation
+        )
     )
+    # [39236, 39236]
 
     References
     ----------
@@ -165,21 +237,18 @@ def cohens_d_sample_size(
         (2nd ed.). Hillsdale, NJ: Lawrence Earlbaum Associates.
     """
     SUPPORTED_STATISTICS = ('t', 'z')
-
-    std_variation = std_variation if std_variation else std_control
-    std_pooled = np.sqrt((std_control ** 2 + std_variation ** 2) / 2.)
-    effect_size = delta / std_pooled
-
+    effect_size = cohens_d(delta, std_control, std_variation)
 
     if statistic in SUPPORTED_STATISTICS:
         power_func = "{}t_ind_solve_power".format(statistic)
-        N1 = int(eval(power_func)(
-            effect_size,
-            alpha=alpha,
-            power=power,
-            ratio=sample_size_ratio
+        N1 = int(
+            eval(power_func)(
+                effect_size,
+                alpha=alpha,
+                power=power,
+                ratio=sample_size_ratio
+            )
         )
-    )
         N2 = int(N1 * sample_size_ratio)
         return [N1, N2]
     else:
@@ -231,14 +300,15 @@ def ratio_sample_size(
     variation_rate = R * control_rate
     delta = variation_rate - control_rate
 
-    print estimate_experiment_sample_sizes(
-        delta,
-        statistic='rates_ratio',
-        control_rate=control_rate,
-        alpha=.05,
-        power=.9,
-        control_exposure_time=2.,
-        sample_size_ratio=.5
+    print(
+        ratio_sample_size(
+            alpha=.05,
+            power=.9,
+            delta=delta,
+            control_rate=control_rate,
+            control_exposure_time=2.,
+            sample_size_ratio=.5
+        )
     )
     # returns [8590, 4295], which have been validated to be more accurate than
     # the result reported in Gu et al, due to rounding precision. For details
@@ -289,7 +359,8 @@ def ratio_sample_size(
         bounds=((1, None), (1, None)),
         constraints=constraints,
         method='SLSQP',
-        tol=1e-10)
+        tol=1e-10
+    )
 
     return [int(np.ceil(n)) for n in results.x]
 
@@ -552,11 +623,13 @@ class MeanComparison(CompareMeans):
 
         f_stat = "{}t_ind_solve_power".format(self.test_statistic)
 
-        return eval(f_stat)(effect_size=self.effect_size,
-                            nobs1=self.d2.nobs,
-                            alpha=self.alpha,
-                            ratio=ratio,
-                            alternative=self.test_direction)
+        return eval(f_stat)(
+            effect_size=self.effect_size,
+            nobs1=self.d2.nobs,
+            alpha=self.alpha,
+            ratio=ratio,
+            alternative=self.test_direction
+        )
 
 
 class ProportionComparison(MeanComparison):

@@ -58,6 +58,12 @@ class Pdf(Plottable):
         """
         raise NotImplementedError("Implement Me")
 
+    def ppf(self, x):
+        return self.dist.ppf(x, self.mean, self.std)
+
+    def cdf(self, x):
+        return self.dist.cdf(x, self.mean, self.std)
+
     def get_series(self):
         xs = self.xgrid().flatten()
         ys = self.density(xs)
@@ -67,7 +73,13 @@ class Pdf(Plottable):
         xs, ys, = self.get_series()
         plt.plot(xs, ys, label=self.label, color=self.color, **plot_args)
         if self.fill:
-            plt.fill_between(xs, ys, color=self.color, alpha=.25)
+            self.plot_area(xs, ys)
+
+    def plot_area(self, xs=None, ys=None, color=None, alpha=.25, label=None):
+        xs = self.xgrid().flatten() if xs is None else xs
+        ys = self.density(xs) if ys is None else ys
+        color = self.color if color is None else color
+        plt.fill_between(xs, ys, color=color, alpha=alpha, label=label)
 
 
 class KdePdf(Pdf):
@@ -110,9 +122,10 @@ class Gaussian(Pdf):
         super(Gaussian, self).__init__(*args, **kwargs)
         self.mean = mean
         self.std = std
+        self.dist = stats.norm
 
     def density(self, xs):
-        return stats.norm.pdf(xs, self.mean, self.std)
+        return self.dist.pdf(xs, self.mean, self.std)
 
     def xgrid(self):
         _min = self.mean - 4 * self.std,
@@ -159,9 +172,10 @@ class Binomial(Pmf):
         super(Binomial, self).__init__(*args, **kwargs)
         self.n = n
         self.p = p
+        self.dist = stats.binom
 
     def density(self, xs):
-        return stats.binom.pmf(xs, self.n, self.p)
+        return self.dist.pmf(xs, self.n, self.p)
 
     def xgrid(self):
         return np.arange(0, self.n)
@@ -175,9 +189,10 @@ class Bernoulli(Pmf):
         super(Bernoulli, self).__init__(*args, **kwargs)
         self.plot_type = plot_type
         self.p = p
+        self.dist = stats.bernoulli
 
     def density(self, xs):
-        return stats.bernoulli.pmf(xs, self.p)
+        return self.dist.pmf(xs, self.p)
 
     def xgrid(self):
         return np.linspace(0., 1., 2)
@@ -190,9 +205,10 @@ class Poisson(Pmf):
     def __init__(self, mu=1, *args, **kwargs):
         super(Poisson, self).__init__(*args, **kwargs)
         self.mu = mu
+        self.dist = stats.poisson
 
     def density(self, xs):
-        return stats.poisson.pmf(xs, self.mu)
+        return self.dist.pmf(xs, self.mu)
 
     def xgrid(self):
         return np.arange(0, max([1 + self.mu * 2., 11]))
@@ -345,11 +361,18 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
 
     fig, axs = plt.subplots(3, 1, figsize=figsize)
     plt.sca(axs[0])
-    pmf_control.plot(plot_type='bar', alpha=.5)
-    pmf_variation.plot(plot_type='bar', alpha=.5)
+
+    # make plotting more scalable
+    if pmf_control.n > 1000 or pmf.variation.n > 1000:
+        plot_type = 'step'
+    else:
+        plot_type = 'bar'
+
+    pmf_control.plot(plot_type=plot_type, alpha=.5)
+    pmf_variation.plot(plot_type=plot_type, alpha=.5)
     raise_y(axs[0])
     plt.xlim(x_min, x_max)
-    plt.gca().get_xaxis().set_ticks([])
+    # plt.gca().get_xaxis().set_ticks([])
     # plt.gca().get_yaxis().set_ticks([])
     plt.legend()
     plt.title("Sample Comparison")

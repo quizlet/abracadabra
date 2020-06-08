@@ -172,7 +172,10 @@ class Experiment(InitRepr):
         corrected_tests = [copy.deepcopy(t) for t in test_suite.tests]
 
         # run original tests
-        original_test_results = [self.run_test(test, alpha, inference_kwargs=inference_kwargs) for test in test_suite.tests]
+        original_test_results = [
+            self.run_test(test, alpha, inference_kwargs=inference_kwargs)
+            for test in test_suite.tests
+        ]
 
         # get p_values for multiple comparison procedure
         p_values = [t.p_value for t in original_test_results]
