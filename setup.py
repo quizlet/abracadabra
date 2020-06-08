@@ -5,8 +5,8 @@ with open("README.md") as f:
 
 setup(
     name="abracadabra",
-    version="0.0.1",
-    description="Suite of tools for AB testing",
+    version="0.0.0",
+    description="Makes AB testing magically simple!",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
     license="MIT",
@@ -87,18 +87,20 @@ setup(
         "zipp==3.1.0",
     ],
     dependency_links=[],
-    scripts=[],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "License :: OSI Approved :: MIT License",
         "Intended Audience :: Science/Research",
+        "Intended Audience :: Developers",
         "Programming Language :: Python :: 3.7",
         "Natural Language :: English",
         "Topic :: Scientific/Engineering :: Mathematics",
         "Topic :: Scientific/Engineering :: Visualization"
     ],
+    keywords=['ab testing', 'analytics', 'statistics', 'Bayesian statistics', 'Frequentist statistics'],
     project_urls={
         'Bug Reports': 'https://github.com/quizlet/abracadabra/issues',
         'Source': 'https://github.com/quizlet/abracadabra/',
     },
+    include_package_data=True
 )
