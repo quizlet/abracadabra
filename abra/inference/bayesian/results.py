@@ -48,7 +48,6 @@ class BayesianTestResults(HypothesisTestResults):
         self.warnings = "\n".join(warnings) if warnings else None
 
     def render_stats_table(self):
-
         tbl = PrettyTable(header=False)
         tbl.add_column(
             "",
@@ -61,7 +60,7 @@ class BayesianTestResults(HypothesisTestResults):
                 "Effect Size",
                 "alpha",
                 "Credible Mass",
-                "p(variation > control)",
+                f"p({self.variation.name} > {self.control.name})",
                 "Inference Method",
                 "Model Hyperarameters",
                 "Inference Method",
