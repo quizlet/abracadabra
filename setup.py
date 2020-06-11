@@ -97,7 +97,13 @@ setup(
         "Topic :: Scientific/Engineering :: Mathematics",
         "Topic :: Scientific/Engineering :: Visualization"
     ],
-    keywords=['ab testing', 'analytics', 'statistics', 'Bayesian statistics', 'Frequentist statistics'],
+    keywords=[
+        'AB testing',
+        'analytics',
+        'statistics',
+        'Bayesian statistics',
+        'Frequentist statistics'
+    ],
     project_urls={
         'Bug Reports': 'https://github.com/quizlet/abracadabra/issues',
         'Source': 'https://github.com/quizlet/abracadabra/',
