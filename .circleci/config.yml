@@ -1,4 +1,6 @@
-version: 2
+version: 2.1
+# orbs:
+#   codecov: codecov/codecov@1.0.2
 
 jobs:
   build:
@@ -27,6 +29,20 @@ jobs:
               - "/usr/local/lib/python3.7/site-packages"
               - "~/abracadabra/compiled_stan_models"
       - run:
-          name: Run tests
+          name: Run Tests
           command: |
-            pipenv run pytest --run_stan_tests test
+            pipenv run coverage run -m --source=abra pytest --junitxml=test-results/junit.xml --run_stan_tests test
+            pipenv run coverage report
+            pipenv run coverage html
+            pipenv run codecov
+
+      # coverage.py artifacts
+      - store_artifacts:
+          path: htmlcov     # Artifact created by `coverage html`: https://circleci.com/docs/2.0/code-coverage/#python
+
+      # pytest artifacts
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: test-results
+      - store_artifacts:    # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: test-results
+          destination: tr1

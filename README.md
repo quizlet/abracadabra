@@ -1,4 +1,8 @@
 # ✨ABracadabra✨
+![MIT License](https://img.shields.io/github/license/quizlet/abracadabra)
+[![quizlet](https://circleci.com/gh/quizlet/abracadabra.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs)
+![Coverage](https://codecov.io/gh/quizlet/abracadabra/branch/master/graph/badge.svg)
+
 
 ✨ABracadabra✨ is a Python framework consisting of statistical tools and a convenient API specialized for running hypothesis tests on observational experiments (aka “AB Tests” in the tech world). The framework has driven [Quizlet](https://quizlet.com)’s experimentation pipeline since 2018.
 
