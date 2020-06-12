@@ -141,16 +141,16 @@ def get_model_data(control_observations, variation_observations, model_name, mod
     # # Deal with model-specific hyperparameters passed in `model_params`
     hyperparameters = {}
     if clean_model_name in ('bernoulli', 'beta_binomial', 'binomial', 'gamma_poisson'):
-        alpha = model_params['alpha'] if 'alpha' in model_params else DEFAULT_BETA_ALPHA
-        beta = model_params['beta'] if 'beta' in model_params else DEFAULT_BETA_BETA
+        alpha = model_params.get('alpha', DEFAULT_BETA_ALPHA)
+        beta = model_params.get('beta', DEFAULT_BETA_BETA)
         hyperparameters.update(dict(alpha_=float(alpha), beta_=float(beta)))
 
     elif clean_model_name in ('gaussian', 'student_t', 'exp_student_t'):
-        std_max = model_params['std_max'] if 'std_max' in model_params else DEFAULT_MAX_STD
+        std_max = model_params.get('std_max',  DEFAULT_MAX_STD)
         hyperparameters.update(dict(std_max=std_max))
 
         if clean_model_name in ('student_t', 'exp_student_t'):
-            precision = model_params['precision'] if 'precision' in model_params else DEFAULT_PRECISION
+            precision = model_params.get('precision', DEFAULT_PRECISION)
             hyperparameters.update(dict(precision=precision))
 
     input_data.update(hyperparameters)
