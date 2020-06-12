@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 orbs:
   codecov: codecov/codecov@1.0.2
 
@@ -28,18 +28,13 @@ jobs:
               - "/usr/local/bin"
               - "/usr/local/lib/python3.7/site-packages"
               - "~/abracadabra/compiled_stan_models"
-      # - run:
-      #     name: Run tests
-      #     command: |
-      #       mkdir test-results
-      #       pipenv run pytest  --run_stan_tests test
-
       - run:
           name: Run Tests
           command: |
             pipenv run coverage run -m --source=abra pytest --junitxml=test-results/junit.xml --run_stan_tests test
             pipenv run coverage report
             pipenv run coverage html
+            pipenv run codecov
 
       # coverage.py artifacts
       - store_artifacts:
