@@ -18,6 +18,7 @@ pystan = "*"
 matplotlib = "*"
 jupyter = "*"
 coverage = "*"
+codecov = "*"
 
 [requires]
 python_version = "3.7"
