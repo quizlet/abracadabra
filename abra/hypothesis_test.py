@@ -128,6 +128,7 @@ class HypothesisTest(InitRepr):
         self.control = control
         self.variation = variation
         self.inference_method = inference_method
+
         self.inference_procedure = get_inference_procedure(inference_method, **infer_params)
         self.suppress_stan_output = suppress_stan_output
 

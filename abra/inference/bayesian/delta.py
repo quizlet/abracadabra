@@ -63,7 +63,6 @@ class BayesianDelta(InferenceProcedure):
         """
         control_observations = self.ensure_dtypes(control.data, 'control')
         variation_observations = self.ensure_dtypes(variation.data, 'variation')
-
         return get_model_data(control_observations, variation_observations, self.model_name, self.model_params)
 
     @property

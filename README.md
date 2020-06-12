@@ -173,10 +173,10 @@ Test Results:
 """
 
 # Visualize Frequentist Test results
-ab_test_results.visualize(outfile="./images/proportions_delta_example.png")
+ab_test_results.visualize()
 ```
 
-![proportions_delta_inference_example](http://github.com/quizlet/abracadabra/blob/master/images/proportions_delta_example.png "proportions_delta Inference Example")
+![proportions_delta_inference_example](./images/proportions_delta_example.png "proportions_delta Inference Example")
 
 We see that the Hypothesis test declares that the variation `'C is larger'` (than the control `"A"`) showing a 43% relative increase in conversion rate, and a moderate effect size of 0.38. This results in a p-value of 0.028, which is lower than the prescribed $\alpha=0.05$.
 
@@ -206,39 +206,45 @@ Observations Summary:
 +----------------+------------------+------------------+
 
 Test Results:
-+------------------------+-------------------------------+
-| Delta                  | 0.1745                        |
-| HDI                    | (-0.0276, 0.3818)             |
-| HDI %-tiles            | (0.0500, 0.9500)              |
-| Delta-relative         | 45.46 %                       |
-| HDI-relative           | (-13.03, 111.61) %            |
-| Effect Size            | 0.3631                        |
-| alpha                  | 0.0500                        |
-| Credible Mass          | 0.9500                        |
-| p(C > A)               | 0.9500                        |
-| Inference Method       | 'beta_binomial'               |
-| Model Hyperarameters   | {'alpha_': 1.0, 'beta_': 1.0} |
-| Inference Method       | 'sample'                      |
-| Hypothesis             | 'C is larger'                 |
-| Accept Hypothesis      | True                          |
-| Warnings               | None                          |
-+------------------------+-------------------------------+
++----------------------+-------------------------------+
+| Delta                | 0.1745                        |
+| HDI                  | (-0.0276, 0.3818)             |
+| HDI %-tiles          | (0.0500, 0.9500)              |
+| Delta-relative       | 45.46 %                       |
+| HDI-relative         | (-13.03, 111.61) %            |
+| Effect Size          | 0.3631                        |
+| alpha                | 0.0500                        |
+| Credible Mass        | 0.9500                        |
+| p(C > A)             | 0.9500                        |
+| Inference Method     | 'beta_binomial'               |
+| Model Hyperarameters | {'alpha_': 1.0, 'beta_': 1.0} |
+| Inference Method     | 'sample'                      |
+| Hypothesis           | 'C is larger'                 |
+| Accept Hypothesis    | True                          |
+| Warnings             | None                          |
++----------------------+-------------------------------+
 """
 
 # Visualize Bayesian AB test results, including samples from the model
-bayesian_ab_test_results.visualize(outfile="./images/beta_binomial_example.png")
+bayesian_ab_test_results.visualize()
 ```
-![`beta_binomial_inference_example](https://github.com/quizlet/abracadabra/blob/master/images/beta_binomial_example.png "beta_binomial Inference Example")
+![`beta_binomial_inference_example](./images/beta_binomial_example.png "beta_binomial Inference Example")
 
 Above we see that the Bayesian hypothesis test provides similar results to the Frequentist test, indicating a 45% relative lift in conversion rate when comparing `"C"` to `"A"`. Rather than providing p-values that are used to accept or reject a Null hypothesis, the Bayesian tests provides directly-interpretable probability estimates `p(C > A) = 0.95`, here indicating that there is 95% chance that the `variation` `"C"` is larger than the `control` `"A"`.
 
 ## [Additional Documentation and Tutorials](https://github.com/quizlet/abracadabra/blob/master/docs)
 
 ## CHANGELOG
-- 2020-06-11: Initial release--`version=0.0.0`
+#### [0.0.0] - 2020-06-11
+##### Changed
+- Initial release
+
+#### [0.0.1] - 2020-06-12
+##### Changed
+- Improved docs
 
 ## TODO / In Works
 - Hypothesis Test `inference_method`s
     + Non-parametric Tests
         * Wilcox Rank-sum / Man-Whitney U
-    + $\Chi^2$ Test for proportions
+    + $\chi^2$ Test for proportions
