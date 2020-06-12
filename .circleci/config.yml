@@ -25,6 +25,7 @@ jobs:
               - ".venv"
               - "/usr/local/bin"
               - "/usr/local/lib/python3.7/site-packages"
+              - "~/abracadabra/compiled_stan_models"
       - run:
           name: Run tests
           command: |
