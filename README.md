@@ -1,6 +1,6 @@
 # ✨ABracadabra✨
 ![MIT License](https://img.shields.io/github/license/quizlet/abracadabra)
-[![quizlet](https://circleci.com/gh/quizlet/abracadabra.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs)
+[![quizlet](https://circleci.com/gh/quizlet/abracadabra.svg?style=shield)](https://circleci.com/gh/quizlet/abracadabra)
 ![Coverage](https://codecov.io/gh/quizlet/abracadabra/branch/master/graph/badge.svg)
 
 
