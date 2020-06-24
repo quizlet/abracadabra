@@ -1,4 +1,5 @@
 import pytest
+import numpy as np
 from abra import utils
 
 
@@ -20,3 +21,8 @@ def test_ensure_dataframe(proportions_data_small):
 
 def test_set_backend():
     assert utils.set_backend() in ('pdf', 'agg')
+
+def test_safe_isnan():
+    assert utils.safe_isnan(None) is False
+    assert utils.safe_isnan(np.inf) == False
+    assert utils.safe_isnan(np.nan) == True

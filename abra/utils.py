@@ -182,3 +182,27 @@ class run_context(suppress_stdout_stderr):
     def __exit__(self, *args, **kwargs):
         if self.suppress:
             super(run_context, self).__exit__()
+
+
+def safe_isnan(val):
+    if val is not None:
+        return np.isnan(val)
+    return False
+
+
+def safe_cast_json(data, mapping):
+    """
+    Apply safe casting of common problem data types (see TYPE_MAPPING).
+    """
+    _apply = lambda x: _safe_cast_json(x, mapping)
+    if isinstance(data, (str, bool)):
+        return data
+    elif isinstance(data, Mapping):
+        return type(data)({k: _apply(v) for k, v in list(data.items())})
+    elif isinstance(data, Sequence):
+        # # additional sequence processing, no None in sequences
+        # _data = [_apply(v) for v in data]
+        # _data = [d if d is not None else 0 for d in _data]
+        return type(data)(_apply(v) for v in data)
+    else:
+        return mapping.get(data, data) if not safe_isnan(data) else mapping[np.nan]
