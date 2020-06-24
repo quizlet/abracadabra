@@ -3,7 +3,7 @@ import sys
 import logging
 from pystan import StanModel
 import pickle as pickle
-from ...config import STAN_MODEL_CACHE
+from abra.config import STAN_MODEL_CACHE
 
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -21,6 +21,7 @@ if not os.path.isdir(STAN_MODEL_CACHE):
 
 def get_stan_model_code(model_name, **model_args):
     clean_model_name = model_name.replace("-", "_").replace(" ", "_")
+
     # Continuous models
     if clean_model_name in ('normal', 'gaussian', 'g'):
         from .models.continuous import gaussian as model_code_function

@@ -68,23 +68,6 @@ class Dataset(object):
 
         return DataFrame(measures).T
 
-    @property
-    def cohort_stats(self):
-        """
-        Return summary statistics for each cohort
-        """
-        groupby = self.data.groupby(self.treatment)[self.measures]
-        return {
-            "total": groupby.sum(),
-            "count": groupby.count(),
-            "mean": groupby.mean(),
-            "median": groupby.median(),
-            "var": groupby.var(),
-            "std": groupby.std(),
-            "max": groupby.max(),
-            "min": groupby.min()
-        }
-
     def segment_samples(self, attribute):
         """
         Return samples from each segment (treatment-attribute pair).
@@ -97,21 +80,3 @@ class Dataset(object):
                     & (self.data[attribute] == segment[1])
                 measures[segment][metric] = self.data[mask][metric].values
         return DataFrame(measures).T
-
-    def segment_stats(self, attribute):
-        """
-        Return summary statistics for each treatment-segment
-        """
-        if attribute not in self.columns:
-            raise DatasetException(f'attribute {attribute} not in dataset')
-
-        groupby = self.data.groupby([self.treatment, attribute])[self.measures]
-        return {"total": groupby.sum(),
-                "count": groupby.count(),
-                "mean": groupby.mean(),
-                "median": groupby.median(),
-                "variance": groupby.var(),
-                "std": groupby.std(),
-                "max": groupby.max(),
-                "min": groupby.min()
-                }

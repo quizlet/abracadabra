@@ -1,5 +1,31 @@
 import pytest
 from abra import Experiment, HypothesisTest
+from abra.inference.bayesian import get_stan_model_code
+from abra.inference.bayesian.models.binary import beta_binomial, binomial, bernoulli
+from abra.inference.bayesian.models.continuous import gaussian, exp_student_t
+from abra.inference.bayesian.models.counts import gamma_poisson
+
+
+def test_binary_model_specs():
+    "Can we better test compilation here?"
+    assert isinstance(binomial(), str)
+    assert isinstance(bernoulli(), str)
+    assert binomial() == get_stan_model_code('binomial')
+    assert beta_binomial() == binomial()
+
+
+def test_continuous_model_specs():
+    "Can we better test compilation here?"
+    assert isinstance(gaussian(), str)
+    assert gaussian() == get_stan_model_code('gaussian')
+    assert isinstance(exp_student_t(), str)
+    assert exp_student_t() == get_stan_model_code('exp_student_t')
+
+
+def test_counts_model_specs():
+    "Can we better test compilation here?"
+    assert isinstance(gamma_poisson(), str)
+    assert gamma_poisson() == get_stan_model_code('gamma_poisson')
 
 
 @pytest.mark.stan_test

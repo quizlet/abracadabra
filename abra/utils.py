@@ -44,11 +44,9 @@ def set_backend():
     """
     from sys import platform
     import matplotlib as mpl
-
-    if platform == 'darwin':  # use well-supported backend on Mac/laptops
-        mpl.use('pdf')
-    else:
-        mpl.use('agg')
+    backend = 'pdf' if platform == 'darwin' else 'agg'
+    mpl.use(backend)
+    return backend
 
 
 def generate_fake_observations(
@@ -80,7 +78,7 @@ def generate_fake_observations(
         sample means.
     distribution: str
         the type of metric distributions simulated
-            - 'bernoulli': the mean increases from .5 by .05 for each successive treatment
+            - 'bernoulli': the mean increases from .5 by .1 for each successive treatment
             - 'gaussian': the mean increases from 0 by 1 for each successive treatment
             - 'poisson': the mean increases from 0 by 10 for each successive treatment
     seed: int
@@ -111,7 +109,7 @@ def generate_fake_observations(
         if 'gauss' in distribution:
             data.loc[tr_mask, 'metric'] = delta + np.random.randn(n_tr)
         elif 'bern' in distribution:
-            data.loc[tr_mask, 'metric'] = list(map(bool, np.round(.05 * delta + np.random.random(n_tr))))
+            data.loc[tr_mask, 'metric'] = list(map(bool, np.round(.1 * delta + np.random.random(n_tr))))
         elif 'poiss' in distribution:
             data.loc[tr_mask, 'metric'] = list(map(int, np.random.poisson(1 + delta , size=n_tr) ))
 

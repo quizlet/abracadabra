@@ -7,7 +7,6 @@ import numpy as np
 
 BIG = 2.**32
 SMALL = -2.**32
-# TYPE_MAPPING = {np.inf: BIG, -np.inf: SMALL, np.nan: SMALL}  # uclear what the best choice is here
 TYPE_MAPPING = {np.inf: None, -np.inf: None, np.nan: None}  # uclear what the best choice is here
 
 
