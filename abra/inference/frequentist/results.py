@@ -67,7 +67,6 @@ class FrequentistTestResults(HypothesisTestResults):
     def render_stats_table(self):
         alpha_string = "alpha (corrected)" if self.correction_method else "alpha"
         tbl = PrettyTable(header=False)
-        # TODO: USE fstrings
         tbl.add_column(
             "",
             [
@@ -90,7 +89,6 @@ class FrequentistTestResults(HypothesisTestResults):
             ],
             align="c"
         )
-        # TODO: USE fstrings
         tbl.add_column(
             "",
             [

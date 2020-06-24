@@ -70,7 +70,6 @@ class BayesianTestResults(HypothesisTestResults):
             ],
             align="c"
         )
-        # TODO: USE fstrings
         tbl.add_column(
             "",
             [

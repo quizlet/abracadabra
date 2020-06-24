@@ -350,9 +350,8 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
         color=VARIATION_COLOR
     )
 
-    # TODO: check that we can de-py2 this
-    xy_control = list(zip(pmf_control.xgrid(), pmf_control.density(pmf_control.xgrid())))
-    xy_variation = list(zip(pmf_variation.xgrid(), pmf_variation.density(pmf_variation.xgrid())))
+    xy_control = zip(pmf_control.xgrid(), pmf_control.density(pmf_control.xgrid()))
+    xy_variation = zip(pmf_variation.xgrid(), pmf_variation.density(pmf_variation.xgrid()))
 
     valid_xy_control = sorted([x for x in xy_control if x[1] >= tol], key=lambda x: x[0])
     valid_xy_variation = sorted([x for x in xy_variation if x[1] >= tol], key=lambda x: x[0])

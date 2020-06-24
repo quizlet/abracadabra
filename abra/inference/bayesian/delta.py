@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# TODO: REMOVE RELATIVE IMPORTS
 from abra.config import DEFAULT_ALPHA, DEFAULT_BAYESIAN_INFERENCE_METHOD
 from abra.inference.inference_base import InferenceProcedure
 from abra.stats import Samples, Traces
-from . import get_stan_model, get_model_datatype, get_model_data
-from .results import BayesianTestResults
+from abra.inference.bayesian import get_stan_model, get_model_datatype, get_model_data
+from abra.inference.bayesian.results import BayesianTestResults
 import numpy as np
 
 

@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# TODO: REMOVE RELATIVE IMPORTS
 from abra.config import search_config
 from pandas import DataFrame
 
@@ -30,14 +29,13 @@ class Dataset(object):
         self.measures = measures if measures \
             else search_config(df, "experiment", "measures")
         self.attributes = attributes if attributes \
-        else search_config(df, "experiment", "attributes")
+            else search_config(df, "experiment", "attributes")
 
         all_columns = [self.treatment] + self.measures + self.attributes + self.meta
         self.data = df[all_columns]
         self.columns = set(all_columns)
 
     def __repr__(self):
-        # return "Dataset(measures={!r},\n\tattributes={!r})".format(self.measures, self.attributes)
         return f"Dataset(measures={self.measures}, attributes={self.attributes})"
 
     @property

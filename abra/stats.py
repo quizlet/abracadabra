@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from abra.config import DEFAULT_ALPHA
+from abra.config import DEFAULT_ALPHA, logger
 from abra.mixin import InitRepr
 from statsmodels.stats.api import DescrStatsW, CompareMeans
 from statsmodels.distributions.empirical_distribution import ECDF
@@ -8,7 +8,6 @@ from statsmodels.stats.power import tt_ind_solve_power, zt_ind_solve_power
 from statsmodels.stats.proportion import proportions_ztest, binom_test
 from scipy.stats import norm
 from scipy import optimize
-import logging
 from pandas import DataFrame
 import numpy as np
 
@@ -537,7 +536,7 @@ Summary:
             _hdi = highest_density_interval(self.data, credible_mass)
             return (round(_hdi[0], 4), round(_hdi[1], 4))
         except Exception as e:
-            logging.warn(e)
+            logger.warn(e)
             return (None, None)
 
     def hist(self, ref_val=None, *hist_args, **hist_kwargs):
@@ -661,7 +660,7 @@ class ProportionComparison(MeanComparison):
         # to use Normal approx, must have large N
         if nobs < 30:
             warning = 'Normality assumption violated, at least 30 observations required. Smallest sample size is {}'.format(nobs)
-            logging.warn(warning)
+            logger.warn(warning)
             self.warnings.append(warning)
 
         self.variance_assumption = variance_assumption
