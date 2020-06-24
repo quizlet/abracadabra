@@ -39,10 +39,6 @@ TEMPLATE_BEGIN_PATTERN = (
     '# ----------------------- BEGIN TEMPLATE -----------------------')
 
 
-def in_test_mode():
-    return os.environ.get('ABRACADABRA_TEST', 'false').lower() == 'true'
-
-
 def expand_env_var(env_var):
     """
     Expands (potentially nested) env vars by repeatedly applying

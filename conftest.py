@@ -1,5 +1,5 @@
 import pytest
-
+from abra.utils import generate_fake_observations
 
 def pytest_addoption(parser):
     parser.addoption(
@@ -28,3 +28,39 @@ def pytest_collection_modifyitems(config, items):
                 item.add_marker(skip_slow_tests)
 
 # Put any global fixtures here (https://docs.pytest.org/en/latest/fixture.html)
+
+@pytest.fixture()
+def proportions_data_large():
+    return generate_fake_observations(
+        distribution='bernoulli',
+        n_treatments=3,
+        n_attributes=4,
+        n_observations=10000
+    )
+
+
+@pytest.fixture()
+def proportions_data_small():
+    return generate_fake_observations(
+        distribution='bernoulli',
+        n_treatments=6,
+        n_observations=6 * 50
+    )
+
+
+@pytest.fixture()
+def means_data():
+    return generate_fake_observations(
+        distribution='gaussian',
+        n_treatments=6,
+        n_observations=6 * 50
+    )
+
+
+@pytest.fixture()
+def counts_data():
+    return generate_fake_observations(
+        distribution='poisson',
+        n_treatments=3,
+        n_observations=3 * 100
+    )
