@@ -161,6 +161,7 @@ def estimate_experiment_sample_sizes(
             sample_size_ratio=.5
         )
     )
+    # [8590, 4295]
     """
     if statistic in ('t', 'z'):
         # std_control and/or std_variation are in *args, or **kwargs
@@ -469,7 +470,7 @@ Summary:
 𝝈² : {:1.4f}""".format(header, self.nobs, self.mean, self.var)
 
     def permute(self):
-        return np.random.choice(self.data, self.nobs)
+        return np.random.choice(self.data, int(self.nobs))
 
     def sort(self):
         if not hasattr(self, '_sorted'):
@@ -804,7 +805,6 @@ def highest_density_interval(samples, mass=.95):
     -------
     hdi: tuple(float)
         The lower and upper bounds of the highest density interval
-
     """
     _samples = np.asarray(sorted(samples))
     n = len(_samples)
@@ -820,130 +820,3 @@ def highest_density_interval(samples, mass=.95):
     hdi_min = _samples[min_idx]
     hdi_max = _samples[min_idx + interval_idx_inc]
     return hdi_min, hdi_max
-
-
-class Traces(object):
-    """
-    Container class for analyzing the results of Bayesian inference procedure.
-
-    Parameters
-    ----------
-    traces: dict
-        Key-value pairs of parameters:samples, extracted from a Bayesian inference
-        procedure.
-    burnin: int
-        We ignore the first `burnin` samples to avoid any autocorrelation. This
-        is particularly helpful when samples are produced by MCMC.
-    """
-
-    def __init__(self, traces):
-        self.variables = []
-        for k, v in list(traces.items()):
-            if k != "lp__":
-                self.variables.append(k)
-                setattr(self, k, Samples(v))
-        self.summarize()
-
-    def summarize(self):
-        prct = [2.5, 25, 50, 75, 97.5]
-        values = []
-        columns = []
-        for v in self.variables:
-            trace = getattr(self, v)
-            _mean = trace.mean
-            _hdi = trace.hdi()
-            _std = trace.std
-            _percentiles = trace.percentiles(prct)
-            values.append(np.r_[_mean, _hdi, _std, _percentiles])
-        columns = ['mean', 'hdi_lower', 'hdi_upper', 'std'] + ["{}%".format(p) for p in prct]
-        self._summary = DataFrame(values, columns=columns, index=self.variables)
-
-    @property
-    def summary(self):
-        return self._summary
-
-    def plot(self, variable, label=None,
-             color=None, ref_val=None, alpha=.25,
-             bins=None, title=None,
-             hdi=None, outfile=None,
-             ref_color=None):
-        """
-        Plot the histogram of a variable trace
-
-        Parameters
-        ----------
-        variable : str
-            The name of one of self.variables to plot
-        label : str
-            Alternative label for the legend
-        ref_val : float
-            A reference value location at which to draw a vertical line
-        alpha : float in [0 1)
-            The transparency of the histogram
-        bins : int
-            The number of histogram bins
-        title : str
-            The title of the plot
-        hdi : float in [0, 1]
-            The amount of probability mass within the Highest Density Interval
-            to display on the histogram.
-        outfile : str
-            The name of an output file to save the figure to.
-        """
-        from matplotlib import pyplot as plt  # lazy import
-        from abra.vis import plot_interval
-
-        if variable not in self.variables:
-            print(self.variables)
-            raise ValueError('Variable `{}` not available'.format(variable))
-
-        label = label if label else variable
-        trace = getattr(self, variable)
-
-        if bins is None:
-            bins = int(len(trace.data) / 50.)
-
-        trace.hist(color=color, alpha=alpha, bins=bins, ref_val=ref_val, label=label)
-
-        if hdi is not None:  # highest density interval
-            median = round(trace.percentiles(50), 3)
-            _hdi = [round(h, 3) for h in trace.hdi(1 - hdi)]
-            plot_interval(*_hdi, middle=median, display_text=True, color=color, offset=5)
-
-        if title is None:
-            if ref_val is not None:
-                gt = round(100 * trace.prob_greater_than(ref_val))
-                title = " {}% < {} = {} < {}%".format(100 - gt, variable, ref_val, gt)
-            else:
-                title = ''
-        plt.title(title, fontsize=16)
-
-        if outfile:
-            plt.savefig(outfile)
-
-
-def extract_traces(inference_results, backend='pystan'):
-    """
-    Parameters
-    ---------
-    inference_results: the output of a StanModel.sampling or .vb method (dict)
-        The results of a PyStan Bayesian inference procedure, holds samples
-        for target parameters
-
-    Returns
-    -------
-    traces: Traces instance
-        a helper class for analyzing Bayesian inference results
-    """
-    if backend == 'pystan':
-        if issubclass(inference_results.__class__, dict):
-            traces = {}
-            for ii in range(len(inference_results['sampler_param_names'])):
-                param_name = inference_results['sampler_param_names'][ii]
-                param_value = np.array(inference_results['sampler_params'][ii])
-                traces[param_name] = param_value
-        else:
-            traces = inference_results.extract()
-    else:
-        raise ValueError("Only 'pystan' backend currently supported.")
-    return Traces(traces)
