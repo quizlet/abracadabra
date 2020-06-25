@@ -8,7 +8,7 @@ from abra.inference.frequentist.means import MeansDelta
 from abra.inference.frequentist.proportions import ProportionsDelta
 from abra.inference.frequentist.rates import RatesRatio
 
-set_backend()  # set backend for any visualization support
+VISUALIZATION_BACKEND = set_backend()  # set backend for any visualization support
 
 __all__ = [
     "Experiment",
@@ -21,5 +21,6 @@ __all__ = [
     "MeansDelta",
     "ProportionsDelta",
     "RatesRatio",
-    "CustomMetric"
+    "CustomMetric",
+    "VISUALIZATION_BACKEND"
 ]

@@ -11,7 +11,7 @@ class BayesianTestResults(HypothesisTestResults):
     ----------
     alpha : float in (0, 1)
         The "significance" level, or type I error rate for the experiment
-    traces : instance of stats.Traces
+    traces : instance of abra.vis.Traces
         The results of a Bayesian inference procedure.
     hdi : tuple
         The values and percentiles associated with the lower and upper bounds of
@@ -70,7 +70,6 @@ class BayesianTestResults(HypothesisTestResults):
             ],
             align="c"
         )
-        # TODO: USE fstrings
         tbl.add_column(
             "",
             [

@@ -1,9 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from .utils import dict_to_object
 from scipy import stats
 from matplotlib import pyplot as plt
+from pandas import DataFrame
 import numpy as np
+from abra.utils import dict_to_object
+from abra.stats import Samples
 NPTS = 100
 
 COLORS = dict_to_object(
@@ -350,9 +352,8 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
         color=VARIATION_COLOR
     )
 
-    # TODO: check that we can de-py2 this
-    xy_control = list(zip(pmf_control.xgrid(), pmf_control.density(pmf_control.xgrid())))
-    xy_variation = list(zip(pmf_variation.xgrid(), pmf_variation.density(pmf_variation.xgrid())))
+    xy_control = zip(pmf_control.xgrid(), pmf_control.density(pmf_control.xgrid()))
+    xy_variation = zip(pmf_variation.xgrid(), pmf_variation.density(pmf_variation.xgrid()))
 
     valid_xy_control = sorted([x for x in xy_control if x[1] >= tol], key=lambda x: x[0])
     valid_xy_variation = sorted([x for x in xy_variation if x[1] >= tol], key=lambda x: x[0])
@@ -520,3 +521,102 @@ def visualize_bayesian_results(results, figsize=RESULTS_FIGSIZE, outfile=None, *
 
     if outfile:
         plt.savefig(outfile)
+
+class Traces(object):
+    """
+    Container class for analyzing the results of Bayesian inference procedure.
+
+    Parameters
+    ----------
+    traces: dict
+        Key-value pairs of parameters:samples, extracted from a Bayesian inference
+        procedure.
+    burnin: int
+        We ignore the first `burnin` samples to avoid any autocorrelation. This
+        is particularly helpful when samples are produced by MCMC.
+    """
+
+    def __init__(self, traces):
+        self.variables = []
+        for k, v in list(traces.items()):
+            if k != "lp__":
+                self.variables.append(k)
+                setattr(self, k, Samples(v))
+        self.summarize()
+
+    def summarize(self):
+        prct = [2.5, 25, 50, 75, 97.5]
+        values = []
+        columns = []
+        for v in self.variables:
+            trace = getattr(self, v)
+            _mean = trace.mean
+            _hdi = trace.hdi()
+            _std = trace.std
+            _percentiles = trace.percentiles(prct)
+            values.append(np.r_[_mean, _hdi, _std, _percentiles])
+        columns = ['mean', 'hdi_lower', 'hdi_upper', 'std'] + ["{}%".format(p) for p in prct]
+        self._summary = DataFrame(values, columns=columns, index=self.variables)
+
+    @property
+    def summary(self):
+        return self._summary
+
+    def plot(self, variable, label=None,
+             color=None, ref_val=None, alpha=.25,
+             bins=None, title=None,
+             hdi=None, outfile=None,
+             ref_color=None):
+        """
+        Plot the histogram of a variable trace
+
+        Parameters
+        ----------
+        variable : str
+            The name of one of self.variables to plot
+        label : str
+            Alternative label for the legend
+        ref_val : float
+            A reference value location at which to draw a vertical line
+        alpha : float in [0 1)
+            The transparency of the histogram
+        bins : int
+            The number of histogram bins
+        title : str
+            The title of the plot
+        hdi : float in [0, 1]
+            The amount of probability mass within the Highest Density Interval
+            to display on the histogram.
+        outfile : str
+            The name of an output file to save the figure to.
+        """
+        from matplotlib import pyplot as plt  # lazy import
+        from abra.vis import plot_interval
+
+        if variable not in self.variables:
+            print(self.variables)
+            raise ValueError('Variable `{}` not available'.format(variable))
+
+        label = label if label else variable
+        trace = getattr(self, variable)
+
+        if bins is None:
+            bins = int(len(trace.data) / 50.)
+
+        trace.hist(color=color, alpha=alpha, bins=bins, ref_val=ref_val, label=label)
+
+        if hdi is not None:  # highest density interval
+            median = round(trace.percentiles(50), 3)
+            _hdi = [round(h, 3) for h in trace.hdi(1 - hdi)]
+            plot_interval(*_hdi, middle=median, display_text=True, color=color, offset=5)
+
+        if title is None:
+            if ref_val is not None:
+                gt = round(100 * trace.prob_greater_than(ref_val))
+                title = " {}% < {} = {} < {}%".format(100 - gt, variable, ref_val, gt)
+            else:
+                title = ''
+        plt.title(title, fontsize=16)
+
+        if outfile:
+            plt.savefig(outfile)

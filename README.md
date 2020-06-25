@@ -234,17 +234,4 @@ Above we see that the Bayesian hypothesis test provides similar results to the F
 
 ## [Additional Documentation and Tutorials](https://github.com/quizlet/abracadabra/blob/master/docs)
 
-## CHANGELOG
-#### [0.0.0] - 2020-06-11
-##### Changed
-- Initial release
-
-#### [0.0.1] - 2020-06-12
-##### Changed
-- Improved docs
-
-## TODO / In Works
-- Hypothesis Test `inference_method`s
-    + Non-parametric Tests
-        * Wilcox Rank-sum / Man-Whitney U
-    + $\chi^2$ Test for proportions
+## [CHANGELOG](./CHANGELOG.md)
