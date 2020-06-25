@@ -31,7 +31,7 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            pipenv run coverage run -m --source=abra pytest --junitxml=test-results/junit.xml --run_stan_tests test
+            pipenv run coverage run -m --omit=abra/vis.py --source=abra pytest --junitxml=test-results/junit.xml --run_stan_tests test
             pipenv run coverage report
             pipenv run coverage html
             pipenv run codecov

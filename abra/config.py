@@ -4,7 +4,6 @@ import logging
 from configparser import ConfigParser
 import getpass
 
-# TODO: SET UP LOGGER FROM CONFIG
 
 CONFIG_TEMPLATE = """
 # Define default configuration for environment, including any common/standard
@@ -38,10 +37,6 @@ default_bayesian_inference_method=sample
 
 TEMPLATE_BEGIN_PATTERN = (
     '# ----------------------- BEGIN TEMPLATE -----------------------')
-
-
-def in_test_mode():
-    return os.environ.get('ABRACADABRA_TEST', 'false').lower() == 'true'
 
 
 def expand_env_var(env_var):
@@ -202,3 +197,6 @@ MIN_OBS_FOR_Z = get('constants', 'min_obs_for_z')
 
 STAN_MODEL_CACHE = get('stan', 'model_cache')
 DEFAULT_BAYESIAN_INFERENCE_METHOD = get('stan', 'default_bayesian_inference_method')
+
+logger = logging.getLogger(__name__)
+logger.setLevel(get('core', 'logging_level'))

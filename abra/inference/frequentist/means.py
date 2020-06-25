@@ -1,10 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-# TODO: REMOVE RELATIVE IMPORTS
-from ...config import DEFAULT_ALPHA, MIN_OBS_FOR_Z
-from ...stats import Samples, MeanComparison
-from .results import FrequentistTestResults
+from abra.config import DEFAULT_ALPHA, MIN_OBS_FOR_Z
+from abra.stats import Samples, MeanComparison
+from abra.inference.frequentist.results import FrequentistTestResults
 from abra.inference import FrequentistProcedure
 from numpy import ndarray
 

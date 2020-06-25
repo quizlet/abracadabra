@@ -1,9 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# TODO: remove relative imports
-from ...config import DEFAULT_ALPHA
-from ...stats import Samples, RateComparison
-from .results import FrequentistTestResults
+from abra.config import DEFAULT_ALPHA
+from abra.stats import Samples, RateComparison
+from abra.inference.frequentist.results import FrequentistTestResults
 from abra.inference import FrequentistProcedure
 import numpy as np
 from scipy.stats import norm

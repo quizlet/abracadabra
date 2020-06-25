@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# TODO: REMOVE RELATIVE IMPORTS
 from abra.config import search_config
 from pandas import DataFrame
 
@@ -30,14 +29,13 @@ class Dataset(object):
         self.measures = measures if measures \
             else search_config(df, "experiment", "measures")
         self.attributes = attributes if attributes \
-        else search_config(df, "experiment", "attributes")
+            else search_config(df, "experiment", "attributes")
 
         all_columns = [self.treatment] + self.measures + self.attributes + self.meta
         self.data = df[all_columns]
         self.columns = set(all_columns)
 
     def __repr__(self):
-        # return "Dataset(measures={!r},\n\tattributes={!r})".format(self.measures, self.attributes)
         return f"Dataset(measures={self.measures}, attributes={self.attributes})"
 
     @property
@@ -70,23 +68,6 @@ class Dataset(object):
 
         return DataFrame(measures).T
 
-    @property
-    def cohort_stats(self):
-        """
-        Return summary statistics for each cohort
-        """
-        groupby = self.data.groupby(self.treatment)[self.measures]
-        return {
-            "total": groupby.sum(),
-            "count": groupby.count(),
-            "mean": groupby.mean(),
-            "median": groupby.median(),
-            "var": groupby.var(),
-            "std": groupby.std(),
-            "max": groupby.max(),
-            "min": groupby.min()
-        }
-
     def segment_samples(self, attribute):
         """
         Return samples from each segment (treatment-attribute pair).
@@ -99,21 +80,3 @@ class Dataset(object):
                     & (self.data[attribute] == segment[1])
                 measures[segment][metric] = self.data[mask][metric].values
         return DataFrame(measures).T
-
-    def segment_stats(self, attribute):
-        """
-        Return summary statistics for each treatment-segment
-        """
-        if attribute not in self.columns:
-            raise DatasetException(f'attribute {attribute} not in dataset')
-
-        groupby = self.data.groupby([self.treatment, attribute])[self.measures]
-        return {"total": groupby.sum(),
-                "count": groupby.count(),
-                "mean": groupby.mean(),
-                "median": groupby.median(),
-                "variance": groupby.var(),
-                "std": groupby.std(),
-                "max": groupby.max(),
-                "min": groupby.min()
-                }
