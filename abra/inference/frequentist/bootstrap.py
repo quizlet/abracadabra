@@ -63,7 +63,7 @@ class BootstrapDelta(FrequentistProcedure):
         """
         Calculate confidence interval around deltas with percentiles and values.
         """
-        ci_vals = self.comparison.confidence_interval(self.alpha, self.hypothesis)
+        ci_vals = self.comparison.confidence_interval(self.alpha)
         return [ci_vals, self.ci_percents]
 
     def accept_hypothesis(self, stat_value):

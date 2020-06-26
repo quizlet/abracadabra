@@ -759,11 +759,11 @@ class RateComparison(MeanComparison):
         W = 2 * (np.sqrt(X2 + (3. / 8)) - np.sqrt((self.null_ratio / d) * (X1 + (3. / 8)))) / np.sqrt(1 + (self.null_ratio / d))
 
         if self.hypothesis == 'larger':
-            p_val = 1 - self.stat_dist.cdf(W)
+            p_val = 1 - norm.cdf(W)
         elif self.hypothesis == 'smaller':
-            p_val = self.stat_dist.cdf(W)
+            p_val = norm.cdf(W)
         elif self.hypothesis == 'unequal':
-            p_val = 1 - self.stat_dist.cdf(abs(W))
+            p_val = 1 - norm.cdf(abs(W))
 
         return W, p_val
 

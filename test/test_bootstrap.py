@@ -12,7 +12,6 @@ def test_small_default_bootstrap_ab_test(proportions_data_large):
         inference_method='bootstrap'
     )
     results_ab = exp.run_test(test_ab)
-    results_ab.display()
 
     assert results_ab.test_statistic == 'bootstrap-mean-delta'
     assert results_ab.accept_hypothesis
@@ -62,7 +61,6 @@ def test_small_median_bootstrap_aa_test(proportions_data_small):
         statistic_function=median,
     )
     results_ab = exp.run_test(test_ab)
-    results_ab.display()
 
     assert results_ab.test_statistic == 'bootstrap-median-delta'
     assert not results_ab.accept_hypothesis
