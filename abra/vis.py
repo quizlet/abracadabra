@@ -478,6 +478,65 @@ def visualize_rates_results(results, figsize=(15, 10), outfile=None, *args, **kw
         plt.savefig(outfile)
 
 
+def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_type='bar', *args, **kwargs):
+    fig, axs = plt.subplots(3, 1, figsize=figsize)
+
+    # Sample Comparison plot
+    plt.sca(axs[0])
+    # control_pmf.plot(plot_type='bar', alpha=.5)
+    # variation_pmf.plot(plot_type='bar', alpha=.5)
+
+    if plot_type == 'bar':
+        bins = 50 if results.control.nobs >= 100 or results.variation.nobs >= 100 else 20
+        results.control.hist(bins=bins, color=CONTROL_COLOR, alpha=.5, label=results.control.name)
+        results.variation.hist(bins=bins, color=VARIATION_COLOR, alpha=.5, label=results.variation.name)
+    else:
+        control_pmf = KdePdf(
+            samples=results.control.data,
+            color=CONTROL_COLOR,
+            label=results.control.name
+        )
+
+        variation_pmf = KdePdf(
+            samples=results.variation.data,
+            color=VARIATION_COLOR,
+            label=results.variation.name
+        )
+        control_pmf.plot(alpha=.5)
+        variation_pmf.plot(alpha=.5)
+    plt.legend()
+    plt.title("Sample Comparison")
+
+    # Rates +/- standard error plot
+    plt.sca(axs[1])
+    plot_interval(
+        *results.control.std_err(),
+        middle=results.control.mean,
+        color=CONTROL_COLOR,
+        display_text=True,
+        label=results.control.name
+    )
+    plot_interval(
+        *results.variation.std_err(),
+        middle=results.variation.mean,
+        color=VARIATION_COLOR,
+        display_text=True,
+        label=results.variation.name
+    )
+    plt.legend()
+    plt.gca().get_yaxis().set_ticks([])
+    plt.title("Bootstrap Statistic +/- Standard Error")
+
+    # Differences plot
+    plt.sca(axs[2])
+
+    plot_interval(*results.ci[0], middle=results.delta, color=DIFF_COLOR, display_text=True)
+    plt.axvline(0., color=DIFF_COLOR, linestyle='--', linewidth=1.5)
+    plt.gca().get_yaxis().set_ticks([])
+    plt.title(results.comparison_type)
+    if outfile:
+        plt.savefig(outfile)
+
 def visualize_bayesian_results(results, figsize=RESULTS_FIGSIZE, outfile=None, *args, **kwargs):
     fig, axs = plt.subplots(2, 1, figsize=figsize)
 

@@ -103,7 +103,7 @@ class FrequentistTestResults(HypothesisTestResults):
                 "{:1.4f}".format(self.alpha),
                 "{:1.4f}".format(self.power),
                 "{!r}".format(self.model_name),
-                "{:1.2f}".format(self.statistic_value),
+                "{:1.4f}".format(self.statistic_value),
                 "{:1.4f}".format(self.p_value),
                 "{!r}".format(self.df),
                 "{!r}".format(self.hypothesis),
@@ -151,6 +151,7 @@ class FrequentistTestResults(HypothesisTestResults):
             visualize_gaussian_results,
             visualize_binomial_results,
             visualize_rates_results,
+            visualize_bootstrap_results,
             RESULTS_FIGSIZE
         )
 
@@ -162,3 +163,5 @@ class FrequentistTestResults(HypothesisTestResults):
             visualize_binomial_results(self, figsize, outfile, *args, **kwargs)
         elif _model_name in ('ratesratio'):
             visualize_rates_results(self, figsize, outfile, *args, **kwargs)
+        elif _model_name in ('bootstrap'):
+            visualize_bootstrap_results(self, figsize, outfile, *args, **kwargs)

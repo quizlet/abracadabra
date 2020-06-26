@@ -11,8 +11,9 @@ class InferenceProcedure(object):
       - `run()`
       - `make_results()`
     """
-    def __init__(self, method=None, *args, **kwargs):
+    def __init__(self, method=None, stat_dist=norm, *args, **kwargs):
         self.method = method
+        self.stat_dist = stat_dist
 
     def run(self, control_samples, variation_samples,
             alpha=None, inference_kwargs=None):
@@ -64,14 +65,15 @@ class FrequentistProcedure(InferenceProcedure):
 
     def accept_hypothesis(self, stat_value):
         """
-        Assumes test statistic follows standard normal.
+        Accept the null hypothesis based on the calculated statistic and statitic
+        distribution.
         """
         if self.hypothesis == 'larger':
-            return stat_value > norm.ppf(1 - self.alpha)
+            return stat_value > self.stat_dist.ppf(1 - self.alpha)
         elif self.hypothesis == 'smaller':
-            return stat_value < norm.ppf(self.alpha)
+            return stat_value < self.stat_dist.ppf(self.alpha)
         elif self.hypothesis == 'unequal':
-            return abs(stat_value) > norm.ppf(1 - self.alpha / 2.)
+            return abs(stat_value) > self.stat_dist.ppf(1 - self.alpha / 2.)
         else:
             raise ValueError('Unknown hypothesis: {!r}'.format(self.hypothesis))
 

@@ -547,7 +547,7 @@ Summary:
 
         """
         from matplotlib import pyplot as plt
-        pl = plt.hist(self.data, *hist_args, **hist_kwargs)
+        pl = plt.hist(self.data.astype(float), *hist_args, **hist_kwargs)
         if ref_val is not None:
             plt.axvline(ref_val, c='gray', linestyle='--', linewidth=2)
         return pl
@@ -684,9 +684,11 @@ class ProportionComparison(MeanComparison):
         s_1 = sum(self.d1.data)
         n_2 = self.d2.nobs
         s_2 = sum(self.d2.data)
-        return proportions_ztest([s_1, s_2], [n_1, n_2],
-                                 alternative=self.test_direction,
-                                 prop_var=prop_var)
+        return proportions_ztest(
+            [s_1, s_2], [n_1, n_2],
+            alternative=self.test_direction,
+            prop_var=prop_var
+        )
 
 
 class RateComparison(MeanComparison):
@@ -743,6 +745,13 @@ class RateComparison(MeanComparison):
         """
         Run the rates comparison hyptothesis test. Uses the W5 statistic defined
         in Gu et al., 2008
+
+        Returns
+        -------
+        W : float
+            The W5 statistic from Gu et al., 2008
+        p_value : float
+            The p-value associated with W
         """
         X1, X2 = self.d2.sum, self.d1.sum
         t1, t2 = self.d2.nobs, self.d1.nobs
@@ -750,11 +759,11 @@ class RateComparison(MeanComparison):
         W = 2 * (np.sqrt(X2 + (3. / 8)) - np.sqrt((self.null_ratio / d) * (X1 + (3. / 8)))) / np.sqrt(1 + (self.null_ratio / d))
 
         if self.hypothesis == 'larger':
-            p_val = 1 - norm.cdf(W)
+            p_val = 1 - self.stat_dist.cdf(W)
         elif self.hypothesis == 'smaller':
-            p_val = norm.cdf(W)
+            p_val = self.stat_dist.cdf(W)
         elif self.hypothesis == 'unequal':
-            p_val = 1 - norm.cdf(abs(W))
+            p_val = 1 - self.stat_dist.cdf(abs(W))
 
         return W, p_val
 
@@ -787,6 +796,153 @@ class RateComparison(MeanComparison):
         W = (A * B - z * C) / D
 
         return round(norm.cdf(W), 4)
+
+
+def highest_density_interval(samples, mass=.95):
+    """
+    Determine the bounds of the interval of width `mass` with the highest density
+    under the distribution of samples.
+
+    Parameters
+    ----------
+    samples: list
+        The samples to compute the interval over
+    mass: float (0, 1)
+        The credible mass under the empricial distribution
+
+    Returns
+    -------
+    hdi: tuple(float)
+        The lower and upper bounds of the highest density interval
+    """
+    _samples = np.asarray(sorted(samples))
+    n = len(_samples)
+
+    interval_idx_inc = int(np.floor(mass * n))
+    n_intervals = n - interval_idx_inc
+    interval_width = _samples[interval_idx_inc:] - _samples[:n_intervals]
+
+    if len(interval_width) == 0:
+        raise ValueError('Too few elements for interval calculation')
+
+    min_idx = np.argmin(interval_width)
+    hdi_min = _samples[min_idx]
+    hdi_max = _samples[min_idx + interval_idx_inc]
+    return hdi_min, hdi_max
+
+
+class BootstrapStatisticComparison(MeanComparison):
+    """
+    Class for comparing a bootstrapped test statistic for two samples. Provides
+    a number of helpful summary statistics about the comparison.
+
+    Parameters
+    ----------
+    samples_a : Samples instance
+        Group a samples
+    samples_b : Samples instance
+        Group b samples
+    alpha : float in (0, 1)
+        The assumed Type I error
+    hypothesis : str
+        Defines the assumed alternative hypothesis. Can be :
+            'larger'
+            'smaller'
+            'unequal' (i.e. two-tailed test)
+    n_bootstraps : int
+        The number of bootstrap samples to draw use for estimates.
+    statistic_function : function
+        Function that returns a scalar test statistic when provided a sequence
+        of samples.
+
+    References
+    ----------
+    TODO: ADD EFRON BOOTSTRAP REFERENCE
+    """
+    def __init__(self, n_bootstraps=1000, statistic_function=None, *args, **kwargs):
+        statistic_function = statistic_function if statistic_function else np.mean
+        statistic_name = statistic_function.__name__
+        super(BootstrapStatisticComparison, self).__init__(
+            test_statistic=f"bootstrap-{statistic_name}-delta", *args, **kwargs)
+        self.statistic_function = statistic_function
+        self.n_bootstraps = n_bootstraps
+
+
+    def bootstrap_test(self):
+        """
+        Run the sample comparison hyptothesis test. Uses the bootstrapped sample statistics
+
+        Returns
+        -------
+        delta: float
+            The observed difference in test statistic
+        p_value : float
+            The p-value associated with delta
+        """
+        all_samples = np.concatenate([self.d1.data, self.d2.data]).astype(float)
+
+        d1_samples = np.random.choice(all_samples, (int(self.d1.nobs), self.n_bootstraps), replace=True)
+        d1_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=d1_samples)
+
+        d2_samples = np.random.choice(all_samples, (int(self.d2.nobs), self.n_bootstraps), replace=True)
+        d2_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=d2_samples)
+
+        # The null sampling distribution of test_statistic deltas
+        self.null_dist = Samples(d2_statistics - d1_statistics, name=f'{self.test_statistic}-null')
+
+        if self.hypothesis == 'larger':
+            p_val = 1 - self.null_dist.cdf(self.delta)
+        elif self.hypothesis == 'smaller':
+            p_val = self.null_dist.cdf(self.delta)
+        elif self.hypothesis == 'unequal':
+            p_val = 1 - self.null_dist.cdf(abs(self.delta))
+
+        return self.delta, p_val
+
+
+    def confidence_interval(self, alpha=.05):
+        """
+        Calculate the (1-alpha)-th confidence interval around the statistic delta.
+        Uses bootstrapped approximation the statistic sampling distribution.
+
+        Returns
+        -------
+        ci : tuple (lo, hi)
+            the (1-alpha) % confidence interval around the statistic estimate.
+        """
+        return  self.deltas_dist.percentiles([100 * alpha, 100 * (1-alpha)])
+
+    @property
+    def deltas_dist(self):
+        if not hasattr(self, '_deltas_dist'):
+            d1_samples = np.random.choice(self.d1.data, (int(self.d1.nobs), self.n_bootstraps), replace=True)
+            d1_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=d1_samples)
+
+            d2_samples = np.random.choice(self.d2.data, (int(self.d2.nobs), self.n_bootstraps), replace=True)
+            d2_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=d2_samples)
+
+            self._deltas_dist = Samples(d1_statistics - d2_statistics, name=f'{self.test_statistic}-deltas')
+
+        return self._deltas_dist
+
+    @property
+    def delta(self):
+        """
+        Delta is difference in test statistics
+        """
+        return self.deltas_dist.mean
+
+    @property
+    def delta_relative(self):
+        return self.delta / np.abs(self.statistic_function(self.d2.data))
+
+    @property
+    def power(self):
+        """
+        Return the statistical power of the current test. Uses
+        """
+        critical_value = self.null_dist.percentiles(100 * (1 - self.alpha))
+        return self.deltas_dist.prob_greater_than(critical_value)
 
 
 def highest_density_interval(samples, mass=.95):
