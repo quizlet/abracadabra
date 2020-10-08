@@ -857,13 +857,14 @@ class BootstrapStatisticComparison(MeanComparison):
 
     References
     ----------
-    TODO: ADD EFRON BOOTSTRAP REFERENCE
+    Efron, B. (1981). "Nonparametric estimates of standard error: The jackknife, the bootstrap and other methods". Biometrika. 68 (3): 589–599
     """
     def __init__(self, n_bootstraps=1000, statistic_function=None, *args, **kwargs):
         statistic_function = statistic_function if statistic_function else np.mean
         statistic_name = statistic_function.__name__
         super(BootstrapStatisticComparison, self).__init__(
-            test_statistic=f"bootstrap-{statistic_name}-delta", *args, **kwargs)
+            test_statistic=f"bootstrap-{statistic_name}-delta", *args, **kwargs
+        )
         self.statistic_function = statistic_function
         self.n_bootstraps = n_bootstraps
 
