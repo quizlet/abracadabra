@@ -23,6 +23,7 @@
 |  | Bayesian| `'beta'`, `'beta_binomial'`, `'bernoulli'`  |
 | Counts/Rates  |Frequentist| `'rates_ratio'`
 |  |Bayesian| `'gamma_poisson'`  |
+| Non-parametric  |Bootstrap| `'bootstrap'` |
 
 - Supports multiple customizations:
     + Custom metric definitions
@@ -146,24 +147,24 @@ Observations Summary:
 +----------------+------------------+------------------+
 | Metric         | metric           | metric           |
 | Observations   | 35               | 44               |
-| Mean           | 0.4286           | 0.6136           |
-| Standard Error | (0.2646, 0.5925) | (0.4698, 0.7575) |
-| Variance       | 0.2449           | 0.2371           |
+| Mean           | 0.4286           | 0.7500           |
+| Standard Error | (0.2646, 0.5925) | (0.6221, 0.8779) |
+| Variance       | 0.2449           | 0.1875           |
 +----------------+------------------+------------------+
 
 Test Results:
 +---------------------------+---------------------+
-| ProportionsDelta          | 0.1851              |
-| ProportionsDelta CI       | (-0.0000, inf)      |
+| ProportionsDelta          | 0.3214              |
+| ProportionsDelta CI       | (0.1473, inf)       |
 | CI %-tiles                | (0.0500, inf)       |
-| ProportionsDelta-relative | 43.18 %             |
-| CI-relative               | (-0.00, inf) %      |
-| Effect Size               | 0.3773              |
+| ProportionsDelta-relative | 75.00 %             |
+| CI-relative               | (34.37, inf) %      |
+| Effect Size               | 0.6967              |
 | alpha                     | 0.0500              |
-| Power                     | 0.5084              |
+| Power                     | 0.9238              |
 | Inference Method          | 'proportions_delta' |
-| Test Statistic ('z')      | 1.91                |
-| p-value                   | 0.0280              |
+| Test Statistic ('z')      | 3.4671              |
+| p-value                   | 0.0003              |
 | Degrees of Freedom        | None                |
 | Hypothesis                | 'C is larger'       |
 | Accept Hypothesis         | True                |
@@ -179,6 +180,61 @@ ab_test_results.visualize()
 ![proportions_delta_inference_example](./images/proportions_delta_example.png "proportions_delta Inference Example")
 
 We see that the Hypothesis test declares that the variation `'C is larger'` (than the control `"A"`) showing a 43% relative increase in conversion rate, and a moderate effect size of 0.38. This results in a p-value of 0.028, which is lower than the prescribed $\alpha=0.05$.
+
+## Bootstrap Hypothesis Tests
+
+If your samples do not follow standard parametric distributions (e.g. Gaussian, Binomial, Poisson), or if you're comparing more exotic descriptive statistics (e.g. median, mode, etc) then you might want to consider using a non-parametric [Bootstrap Hypothesis Test](https://en.wikipedia.org/wiki/Bootstrapping_(statistics)).  Running bootstrap tests is easy in ✨abracadabra✨, you simply use the `"bootstrap"` `inference_method`.
+
+```python
+# Tests and data can be copied via the `.copy` method.
+bootstrap_ab_test = ab_test.copy(inference_method='bootstrap')
+
+# Run the Bootstrap test
+bootstrap_ab_test_results = exp.run_test(bootstrap_ab_test)
+
+# Display results
+bootstrap_ab_test_results.display()
+
+"""
+Observations Summary:
++----------------+------------------+------------------+
+| Treatment      | A                | C                |
++----------------+------------------+------------------+
+| Metric         | metric           | metric           |
+| Observations   | 35               | 44               |
+| Mean           | 0.4286           | 0.7500           |
+| Standard Error | (0.2646, 0.5925) | (0.6221, 0.8779) |
+| Variance       | 0.2449           | 0.1875           |
++----------------+------------------+------------------+
+
+Test Results:
++-----------------------------------------+-------------------+
+| BootstrapDelta                          | 0.3285            |
+| BootstrapDelta CI                       | (0.1497, 0.5039)  |
+| CI %-tiles                              | (0.0500, inf)     |
+| BootstrapDelta-relative                 | 76.65 %           |
+| CI-relative                             | (34.94, 117.58) % |
+| Effect Size                             | 0.7121            |
+| alpha                                   | 0.0500            |
+| Power                                   | 0.8950            |
+| Inference Method                        | 'bootstrap'       |
+| Test Statistic ('bootstrap-mean-delta') | 0.3285            |
+| p-value                                 | 0.0020            |
+| Degrees of Freedom                      | None              |
+| Hypothesis                              | 'C is larger'     |
+| Accept Hypothesis                       | True              |
+| MC Correction                           | None              |
+| Warnings                                | None              |
++-----------------------------------------+-------------------+
+"""
+
+## Visualize Bayesian AB test results, including samples from the model
+bootstrap_ab_test_results.visualize()
+```
+
+![`bootstrap_test_example](./images/bootstrap_example.png "bootstrap Inference Example")
+
+Notice that the `"bootstrap"` hypothesis test results above--which are based on resampling the data set with replacent--are very similar to the results returned by the `"proportions_delta"` parametric model, which are based on descriptive statistics and model the data set as a Binomial distribution. The results will converge as the sample sizes grow.
 
 ## Bayesian AB Tests
 
@@ -200,22 +256,22 @@ Observations Summary:
 +----------------+------------------+------------------+
 | Metric         | metric           | metric           |
 | Observations   | 35               | 44               |
-| Mean           | 0.4286           | 0.6136           |
-| Standard Error | (0.2646, 0.5925) | (0.4698, 0.7575) |
-| Variance       | 0.2449           | 0.2371           |
+| Mean           | 0.4286           | 0.7500           |
+| Standard Error | (0.2646, 0.5925) | (0.6221, 0.8779) |
+| Variance       | 0.2449           | 0.1875           |
 +----------------+------------------+------------------+
 
 Test Results:
 +----------------------+-------------------------------+
-| Delta                | 0.1745                        |
-| HDI                  | (-0.0276, 0.3818)             |
+| Delta                | 0.3028                        |
+| HDI                  | (0.0965, 0.5041)              |
 | HDI %-tiles          | (0.0500, 0.9500)              |
-| Delta-relative       | 45.46 %                       |
-| HDI-relative         | (-13.03, 111.61) %            |
-| Effect Size          | 0.3631                        |
+| Delta-relative       | 76.23 %                       |
+| HDI-relative         | (7.12, 152.56) %              |
+| Effect Size          | 0.6628                        |
 | alpha                | 0.0500                        |
 | Credible Mass        | 0.9500                        |
-| p(C > A)             | 0.9500                        |
+| p(C > A)             | 0.9978                        |
 | Inference Method     | 'beta_binomial'               |
 | Model Hyperarameters | {'alpha_': 1.0, 'beta_': 1.0} |
 | Inference Method     | 'sample'                      |

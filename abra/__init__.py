@@ -7,6 +7,7 @@ from abra.inference.bayesian.delta import BayesianDelta
 from abra.inference.frequentist.means import MeansDelta
 from abra.inference.frequentist.proportions import ProportionsDelta
 from abra.inference.frequentist.rates import RatesRatio
+from abra.inference.frequentist.bootstrap import BootstrapDelta
 
 VISUALIZATION_BACKEND = set_backend()  # set backend for any visualization support
 
@@ -21,6 +22,7 @@ __all__ = [
     "MeansDelta",
     "ProportionsDelta",
     "RatesRatio",
+    "BootstrapDelta",
     "CustomMetric",
     "VISUALIZATION_BACKEND"
 ]

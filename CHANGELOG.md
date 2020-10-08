@@ -1,7 +1,9 @@
-## [0.0.2] - 2020-06-[WIP]
+## [0.0.2] - 2020-10-08
 ### Changed
 - Improved docs
 - Expaded test coverage
+- Added Bootstrap hypothesis tests
+- Split up tests
 
 ## [0.0.1] - 2020-06-12
 ### Changed

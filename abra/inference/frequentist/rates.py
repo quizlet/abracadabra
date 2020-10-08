@@ -101,7 +101,7 @@ class RatesRatio(FrequentistProcedure):
         X2, t2 = variation.data.sum(), variation.nobs
 
         lam_1 = X1 / t1
-        lam_2 = X2 /  t2
+        lam_2 = X2 / t2
 
         lam_2_lam_1 = lam_2 * lam_1
 
@@ -110,6 +110,7 @@ class RatesRatio(FrequentistProcedure):
 
         # Gu et al, 2008; Eq 3
         L = (lam_2_lam_1 - np.sqrt(lam_2_lam_1 ** 2 - l1 * (2 * lam_2 - l1) * (u2 * (2 * lam_1 - u2)))) /  (u2 * (2 * lam_1 - u2))
+
         # Gu et al, 2008; Eq 4
         U = (lam_2_lam_1 + np.sqrt(lam_2_lam_1 ** 2 - u1 * (2 * lam_2 - u1) * (l2 * (2 * lam_1 - l2)))) / (l2 * (2 * lam_1 - l2))
 
@@ -122,17 +123,19 @@ class RatesRatio(FrequentistProcedure):
         statistic_value, p_value = self.stats
         accept_hypothesis = self.accept_hypothesis(statistic_value)
 
-        return FrequentistTestResults(control=self.comparison.d2,
-                                      variation=self.comparison.d1,
-                                      delta=self.comparison.delta,
-                                      delta_relative=self.comparison.delta_relative,
-                                      effect_size=self.comparison.effect_size,
-                                      alpha=self.comparison.alpha,
-                                      confidence_interval=self.ci,
-                                      test_statistic=self.test_statistic,
-                                      statistic_value=statistic_value,
-                                      p_value=p_value,
-                                      hypothesis=self.hypothesis_text,
-                                      accept_hypothesis=accept_hypothesis,
-                                      inference_procedure=self,
-                                      power=self.comparison.power)
+        return FrequentistTestResults(
+            control=self.comparison.d2,
+            variation=self.comparison.d1,
+            delta=self.comparison.delta,
+            delta_relative=self.comparison.delta_relative,
+            effect_size=self.comparison.effect_size,
+            alpha=self.comparison.alpha,
+            confidence_interval=self.ci,
+            test_statistic=self.test_statistic,
+            statistic_value=statistic_value,
+            p_value=p_value,
+            hypothesis=self.hypothesis_text,
+            accept_hypothesis=accept_hypothesis,
+            inference_procedure=self,
+            power=self.comparison.power
+        )

@@ -12,6 +12,9 @@ def get_inference_procedure(method, **infer_params):
     elif _method in ('ratesratio'):
         from abra import RatesRatio as IP
 
+    elif _method in ('bootstrap'):
+        from abra import BootstrapDelta as IP
+
     elif method in (
         'gaussian',
         'bernoulli',

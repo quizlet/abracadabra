@@ -26,10 +26,7 @@ class MeansDelta(FrequentistProcedure):
         - 'pooled': assume the same variance
         - 'unequal': use Smith-Satterthwait dof when calculating t-stat
     """
-    def __init__(self,
-                 var_assumptions='unequal',
-                 *args, **kwargs):
-
+    def __init__(self, var_assumptions='unequal', *args, **kwargs):
         super(MeansDelta, self).__init__(*args, **kwargs)
         self.var_assumptions = var_assumptions
 
@@ -86,19 +83,21 @@ class MeansDelta(FrequentistProcedure):
         accept_hypothesis = self.accept_hypothesis(statistic_value)
         df = stats[2] if self.test_statistic == 't' else None
 
-        return FrequentistTestResults(control=self.comparison.d2,
-                                      variation=self.comparison.d1,
-                                      delta=self.comparison.delta,
-                                      delta_relative=self.comparison.delta_relative,
-                                      effect_size=self.comparison.effect_size,
-                                      alpha=self.comparison.alpha,
-                                      power=self.comparison.power,
-                                      confidence_interval=self.ci,
-                                      test_statistic=self.test_statistic,
-                                      statistic_value=statistic_value,
-                                      p_value=p_value,
-                                      df=df,
-                                      hypothesis=self.hypothesis_text,
-                                      accept_hypothesis=accept_hypothesis,
-                                      inference_procedure=self,
-                                      warnings=self.comparison.warnings)
+        return FrequentistTestResults(
+            control=self.comparison.d2,
+            variation=self.comparison.d1,
+            delta=self.comparison.delta,
+            delta_relative=self.comparison.delta_relative,
+            effect_size=self.comparison.effect_size,
+            alpha=self.comparison.alpha,
+            power=self.comparison.power,
+            confidence_interval=self.ci,
+            test_statistic=self.test_statistic,
+            statistic_value=statistic_value,
+            p_value=p_value,
+            df=df,
+            hypothesis=self.hypothesis_text,
+            accept_hypothesis=accept_hypothesis,
+            inference_procedure=self,
+            warnings=self.comparison.warnings
+        )
