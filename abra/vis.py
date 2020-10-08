@@ -504,6 +504,7 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
         )
         control_pmf.plot(alpha=.5)
         variation_pmf.plot(alpha=.5)
+
     plt.legend()
     plt.title("Sample Comparison")
 
