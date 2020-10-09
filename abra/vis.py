@@ -508,25 +508,25 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
     plt.legend()
     plt.title("Sample Comparison")
 
-    # Rates +/- standard error plot
+    # Bootstrapped statistic +/- standard error plot
     plt.sca(axs[1])
     plot_interval(
-        *results.control.std_err(),
-        middle=results.control.mean,
+        *results.aux['control'].hdi(),
+        middle=results.aux['control'].mean,
         color=CONTROL_COLOR,
         display_text=True,
         label=results.control.name
     )
     plot_interval(
-        *results.variation.std_err(),
-        middle=results.variation.mean,
+        *results.aux['variation'].hdi(),
+        middle=results.aux['variation'].mean,
         color=VARIATION_COLOR,
         display_text=True,
         label=results.variation.name
     )
     plt.legend()
     plt.gca().get_yaxis().set_ticks([])
-    plt.title("Bootstrap Statistic +/- Standard Error")
+    plt.title(f"Bootstrap({results.test_statistic}) +/- 95% HDI")
 
     # Differences plot
     plt.sca(axs[2])
@@ -534,7 +534,7 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
     plot_interval(*results.ci[0], middle=results.delta, color=DIFF_COLOR, display_text=True)
     plt.axvline(0., color=DIFF_COLOR, linestyle='--', linewidth=1.5)
     plt.gca().get_yaxis().set_ticks([])
-    plt.title(results.comparison_type)
+    plt.title(f"{results.comparison_type}({results.test_statistic})")
     if outfile:
         plt.savefig(outfile)
 

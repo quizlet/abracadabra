@@ -87,6 +87,10 @@ class BootstrapDelta(FrequentistProcedure):
         self.stat_dist = self.comparison.null_dist
         accept_hypothesis = self.accept_hypothesis(statistic_value)
 
+        aux = {
+            'control': self.comparison.control_bootstrap,
+            'variation': self.comparison.variation_bootstrap
+        }
         return FrequentistTestResults(
             control=self.comparison.d2,
             variation=self.comparison.d1,
@@ -103,5 +107,6 @@ class BootstrapDelta(FrequentistProcedure):
             hypothesis=self.hypothesis_text,
             accept_hypothesis=accept_hypothesis,
             inference_procedure=self,
-            warnings=self.comparison.warnings
+            warnings=self.comparison.warnings,
+            aux=aux
         )
