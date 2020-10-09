@@ -283,10 +283,13 @@ class HypothesisTestResults(TestResultsBase):
         The name of the metric that is being compared
     warnings : list[str]
         A list of any warning messages accumultaed during the test
+    aux : dict
+        Auxillary variables used for displaying or visualizing specific types
+        of tests.
     """
     def __init__(self, control, variation,
                  delta, delta_relative, effect_size,
-                 inference_procedure, warnings=[]):
+                 inference_procedure, warnings=[], aux={}):
 
         self.control = control
         self.variation = variation
@@ -296,6 +299,7 @@ class HypothesisTestResults(TestResultsBase):
         self.inference_procedure = inference_procedure
         self.metric_name = None  # this gets updated by the test
         self.warnings = warnings
+        self.aux = aux
 
     @property
     def samples_table(self):

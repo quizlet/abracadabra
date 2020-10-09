@@ -634,7 +634,7 @@ class MeanComparison(CompareMeans):
 
 class ProportionComparison(MeanComparison):
     """
-    Class for comparing the propritions of two sample distributions, provides a number
+    Class for comparing the proportions of two sample distributions, provides a number
     of helpful summary statistics about the comparison. In order to use the
     z-distribution, we assume normality or proportions and thus, by proxy, adequate
     sample sizes (i.e. > 30).
@@ -863,7 +863,7 @@ class BootstrapStatisticComparison(MeanComparison):
         statistic_function = statistic_function if statistic_function else np.mean
         statistic_name = statistic_function.__name__
         super(BootstrapStatisticComparison, self).__init__(
-            test_statistic=f"bootstrap-{statistic_name}-delta", *args, **kwargs
+            test_statistic=f"{statistic_name}", *args, **kwargs
         )
         self.statistic_function = statistic_function
         self.n_bootstraps = n_bootstraps
@@ -887,6 +887,16 @@ class BootstrapStatisticComparison(MeanComparison):
 
         d2_samples = np.random.choice(all_samples, (int(self.d2.nobs), self.n_bootstraps), replace=True)
         d2_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=d2_samples)
+
+        control_bs_samples = np.random.choice(self.d2.data, (int(self.d2.nobs), self.n_bootstraps), replace=True)
+        control_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=control_bs_samples)
+        self.control_bootstrap = Samples(control_statistics, name='control')
+
+        variation_bs_samples = np.random.choice(self.d1.data, (int(self.d1.nobs), self.n_bootstraps), replace=True)
+        variation_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=variation_bs_samples)
+        self.variation_bootstrap = Samples(variation_statistics, name='variation')
+
+        # import pdb; pdb.set_trace()
 
         # The null sampling distribution of test_statistic deltas
         self.null_dist = Samples(d2_statistics - d1_statistics, name=f'{self.test_statistic}-null')

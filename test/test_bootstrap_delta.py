@@ -13,7 +13,7 @@ def test_small_default_bootstrap_unequal_ab_test(proportions_data_large):
     )
     results_ab = exp.run_test(test_ab)
 
-    assert results_ab.test_statistic == 'bootstrap-mean-delta'
+    assert results_ab.test_statistic == 'mean'
     assert results_ab.accept_hypothesis
 
 
@@ -29,7 +29,7 @@ def test_small_default_bootstrap_unequal_aa_test(proportions_data_small):
     )
     results_ab = exp.run_test(test_ab)
 
-    assert results_ab.test_statistic == 'bootstrap-mean-delta'
+    assert results_ab.test_statistic == 'mean'
     assert not results_ab.accept_hypothesis
 
 
@@ -74,7 +74,7 @@ def test_small_median_bootstrap_ab_test(proportions_data_small):
     )
     results_ab = exp.run_test(test_ab)
 
-    assert results_ab.test_statistic == 'bootstrap-median-delta'
+    assert results_ab.test_statistic == 'median'
     assert results_ab.accept_hypothesis
 
 
@@ -107,5 +107,5 @@ def test_small_median_bootstrap_aa_test(proportions_data_small):
     )
     results_ab = exp.run_test(test_ab)
 
-    assert results_ab.test_statistic == 'bootstrap-median-delta'
+    assert results_ab.test_statistic == 'median'
     assert not results_ab.accept_hypothesis

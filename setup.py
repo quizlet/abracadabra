@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 setup(
     name="abracadabra",
-    version="0.0.2",
+    version="0.0.3",
     description="Makes AB testing magically simple!",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
