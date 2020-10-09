@@ -10,7 +10,6 @@ from scipy.stats import norm
 from scipy import optimize
 from pandas import DataFrame
 import numpy as np
-from copy import deepcopy
 
 
 CORRECTIONS = {'b': 'bonferroni', 's': 'sidak', 'bh': 'fdr_bh'}
