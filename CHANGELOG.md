@@ -1,3 +1,8 @@
+## [0.0.3] - 2020-WIP
+### Changed
+- Improved docs
+- Improve bootstrap visualization
+
 ## [0.0.2] - 2020-10-08
 ### Changed
 - Improved docs
