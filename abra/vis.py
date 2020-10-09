@@ -508,7 +508,7 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
     plt.legend()
     plt.title("Sample Comparison")
 
-    # Bootstrapped statistic +/- standard error plot
+    # Bootstrapped statistic +/- HDI
     plt.sca(axs[1])
     plot_interval(
         *results.aux['control'].hdi(),
