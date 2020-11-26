@@ -45,7 +45,7 @@ setup(
         "more-itertools==8.3.0",
         "nbconvert==5.6.1",
         "nbformat==5.0.6",
-        "notebook==6.0.3",
+        "notebook>=6.1.4",
         "numpy==1.18.4",
         "packaging==20.4",
         "pandas==1.0.4",
