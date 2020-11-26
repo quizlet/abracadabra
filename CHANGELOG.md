@@ -1,3 +1,8 @@
+## [0.0.4] - 2020-11-25
+### Changed
+- Update notebook dependency to address security vulnerability
+
+
 ## [0.0.3] - 2020-10-09
 ### Changed
 - Improved docs
