@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 setup(
     name="abracadabra",
-    version="0.0.3",
+    version="0.0.4",
     description="Makes AB testing magically simple!",
     long_description=LONG_DESCRIPTION,
     long_description_content_type="text/markdown",
@@ -45,7 +45,7 @@ setup(
         "more-itertools==8.3.0",
         "nbconvert==5.6.1",
         "nbformat==5.0.6",
-        "notebook==6.0.3",
+        "notebook>=6.1.4",
         "numpy==1.18.4",
         "packaging==20.4",
         "pandas==1.0.4",

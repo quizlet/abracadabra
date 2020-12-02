@@ -17,6 +17,7 @@ pipfile = "*"
 pystan = "*"
 matplotlib = "*"
 jupyter = "*"
+notebook = ">=6.1.5"
 coverage = "*"
 codecov = "*"
 
