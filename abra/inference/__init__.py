@@ -20,7 +20,9 @@ def get_inference_procedure(method, **infer_params):
         'bernoulli',
         'binomial',
         'beta_binomial',
-        'gamma_poisson'
+        'gamma_poisson',
+        'student_t',
+        'exp_student_t'
     ):
 
         from abra import BayesianDelta as IP
