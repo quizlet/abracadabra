@@ -18,7 +18,7 @@
 | Variable Type | Model Class| `inference_method` parameter  |
 |---|---|---|
 | Continuous | Frequentist| `'means_delta'` (t-test) |
-|  | Bayesian| `'gaussian'`, `'exp_student_t'`|
+|  | Bayesian| `'gaussian'`, `'student_t'`, `'exp_student_t'`|
 | Binary / Proportions | Frequentist| `'proportions_delta'` (z-test) |
 |  | Bayesian| `'beta'`, `'beta_binomial'`, `'bernoulli'`  |
 | Counts/Rates  |Frequentist| `'rates_ratio'`
