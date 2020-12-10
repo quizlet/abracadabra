@@ -20,7 +20,7 @@
 | Continuous | Frequentist| `'means_delta'` (t-test) |
 |  | Bayesian| `'gaussian'`, `'student_t'`, `'exp_student_t'`|
 | Binary / Proportions | Frequentist| `'proportions_delta'` (z-test) |
-|  | Bayesian| `'beta'`, `'beta_binomial'`, `'bernoulli'`  |
+|  | Bayesian| `'binomial'`, `'beta_binomial'`, `'bernoulli'`  |
 | Counts/Rates  |Frequentist| `'rates_ratio'`
 |  |Bayesian| `'gamma_poisson'`  |
 | Non-parametric  |Bootstrap| `'bootstrap'` |
