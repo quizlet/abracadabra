@@ -1,3 +1,7 @@
+## [0.0.5] - 2020-12-10
+### Changed
+- Add student models to HypothesisTest options
+
 ## [0.0.4] - 2020-11-25
 ### Changed
 - Update notebook dependency to address security vulnerability
