@@ -20,8 +20,8 @@ pipfile = "*"
 pystan = "*"
 matplotlib = "*"
 jupyter = "*"
-notebook = ">=6.1.5"
-bleach = ">=3.3.0"
+notebook = "*"
+bleach = "*"
 
 [requires]
 python_version = "3.7"
