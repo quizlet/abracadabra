@@ -1,6 +1,10 @@
 import numpy as np
 from abra.experiment import Experiment
-from abra.hypothesis_test import HypothesisTest, HypothesisTestSuite, CustomMetric
+from abra.hypothesis_test import (
+    HypothesisTest,
+    HypothesisTestSuite,
+    CustomMetric
+)
 
 
 def test_hypothesis_test_suite(proportions_data_large):
