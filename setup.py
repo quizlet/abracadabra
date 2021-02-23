@@ -20,7 +20,7 @@ setup(
         "appnope==0.1.0",
         "attrs==19.3.0",
         "backcall==0.1.0",
-        "bleach==3.1.5",
+        "bleach==3.3.0",
         "cycler==0.10.0",
         "cython==0.29.19",
         "decorator==4.4.2",
