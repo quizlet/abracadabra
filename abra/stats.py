@@ -896,8 +896,6 @@ class BootstrapStatisticComparison(MeanComparison):
         variation_statistics = np.apply_along_axis(self.statistic_function, axis=0, arr=variation_bs_samples)
         self.variation_bootstrap = Samples(variation_statistics, name='variation')
 
-        # import pdb; pdb.set_trace()
-
         # The null sampling distribution of test_statistic deltas
         self.null_dist = Samples(d2_statistics - d1_statistics, name=f'{self.test_statistic}-null')
 

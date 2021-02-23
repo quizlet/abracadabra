@@ -38,7 +38,7 @@ class CohortFilter(object):
         cohort_data : DataFrame
             cohort data, filtered from `data`
         """
-        return data.query(f"{self.treatment_column} == '{self.treatment_name}'")
+        return data.query(f"`{self.treatment_column}` == '{self.treatment_name}'")
 
 
 class SegmentFilter(object):

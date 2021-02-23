@@ -5,9 +5,12 @@ verify_ssl = true
 
 [dev-packages]
 pipenv-setup = "*"
+coverage = "*"
+codecov = "*"
+pytest = "*"
+autopep8 = "*"
 
 [packages]
-pytest = "*"
 numpy = "*"
 pandas = "*"
 pyyaml = "*"
@@ -17,9 +20,8 @@ pipfile = "*"
 pystan = "*"
 matplotlib = "*"
 jupyter = "*"
-notebook = ">=6.1.5"
-coverage = "*"
-codecov = "*"
+notebook = "*"
+bleach = "*"
 
 [requires]
 python_version = "3.7"

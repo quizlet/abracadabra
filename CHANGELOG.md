@@ -1,3 +1,9 @@
+## [0.0.6] - 2021-02-22
+### Changed
+- Update dependencies
+- Support for spaced column names in `Dataset`
+- Improve and standardize visualizations
+
 ## [0.0.5] - 2020-12-10
 ### Changed
 - Add student models to HypothesisTest options

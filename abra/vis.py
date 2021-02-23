@@ -7,6 +7,7 @@ import numpy as np
 from abra.utils import dict_to_object
 from abra.stats import Samples
 NPTS = 100
+LABEL_Y_OFFSET_FACTOR = 30.
 
 COLORS = dict_to_object(
     {
@@ -224,7 +225,8 @@ class Poisson(Pmf):
 
 def plot_interval(
     left, right, middle,
-    color=None, display_text=False, label=None, y=0., offset=.005, fontsize=14
+    color=None, display_text=False,
+    label=None, y=0., offset=.005, fontsize=14
 ):
     color = color if color else 'k'
     text_y = y + offset
@@ -290,9 +292,13 @@ def visualize_gaussian_results(results, figsize=(15, 10), outfile=None, *args, *
     x_min, x_max = plt.xlim()
 
     plt.sca(axs[1])
+    y_min, y_max = plt.ylim()
+    y_dist = (y_max - y_min) / LABEL_Y_OFFSET_FACTOR
     plot_interval(
         *results.control.std_err(),
         middle=results.control.mean,
+        y=y_dist,
+        offset=-.015,
         color=CONTROL_COLOR,
         display_text=True,
         label=results.control.name
@@ -300,6 +306,8 @@ def visualize_gaussian_results(results, figsize=(15, 10), outfile=None, *args, *
     plot_interval(
         *results.variation.std_err(),
         middle=results.variation.mean,
+        y=-y_dist,
+        offset=0.005,
         color=VARIATION_COLOR,
         display_text=True,
         label=results.variation.name
@@ -311,10 +319,8 @@ def visualize_gaussian_results(results, figsize=(15, 10), outfile=None, *args, *
 
     # plot differences distribution
     plt.sca(axs[2])
-
     plt.axvline(0., color=DIFF_COLOR, linestyle='--', linewidth=1.5)
 
-    # xs = pdf_diff.xgrid()
     if results.inference_procedure.hypothesis == 'larger':
         left_bound = results.ci[0][0]
         right_bound = np.inf
@@ -325,11 +331,21 @@ def visualize_gaussian_results(results, figsize=(15, 10), outfile=None, *args, *
         left_bound = results.ci[0][0]
         right_bound = results.ci[0][1]
 
-    plot_interval(left_bound, right_bound, mean_diff, color=DIFF_COLOR, display_text=True)
+    plot_interval(
+        left_bound,
+        right_bound,
+        mean_diff,
+        color=DIFF_COLOR,
+        display_text=True
+    )
     plt.gca().get_yaxis().set_ticks([])
     plt.title(results.comparison_type)
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(
+            outfile,
+            bbox_inches='tight',
+            dpi=300
+        )
 
 
 def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, **kwargs):
@@ -385,9 +401,13 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
     plt.title("Sample Comparison")
 
     plt.sca(axs[1])
+    y_min, y_max = plt.ylim()
+    y_dist = (y_max - y_min) / LABEL_Y_OFFSET_FACTOR
     plot_interval(
         *results.control.std_err(),
         middle=results.control.mean,
+        y=y_dist,
+        offset=-0.015,
         color=CONTROL_COLOR,
         display_text=True,
         label=results.control.name
@@ -395,6 +415,8 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
     plot_interval(
         *results.variation.std_err(),
         middle=results.variation.mean,
+        y=-y_dist,
+        offset=0.005,
         color=VARIATION_COLOR,
         display_text=True,
         label=results.variation.name
@@ -402,7 +424,7 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
 
     plt.legend()
     plt.gca().get_yaxis().set_ticks([])
-    plt.title("Probabilities +/- Standard Error")
+    plt.title("Proportions +/- Standard Error")
 
     # Differences plot
     plt.sca(axs[2])
@@ -419,11 +441,21 @@ def visualize_binomial_results(results, figsize=(15, 10), outfile=None, *args, *
         left_bound = results.ci[0][0]
         right_bound = results.ci[0][1]
 
-    plot_interval(left_bound, right_bound, mean_diff, color=DIFF_COLOR, display_text=True)
+    plot_interval(
+        left_bound,
+        right_bound,
+        mean_diff,
+        color=DIFF_COLOR,
+        display_text=True
+    )
     plt.gca().get_yaxis().set_ticks([])
     plt.title(results.comparison_type)
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(
+            outfile,
+            bbox_inches='tight',
+            dpi=300
+        )
 
 
 def visualize_rates_results(results, figsize=(15, 10), outfile=None, *args, **kwargs):
@@ -449,9 +481,13 @@ def visualize_rates_results(results, figsize=(15, 10), outfile=None, *args, **kw
 
     # Rates +/- standard error plot
     plt.sca(axs[1])
+    y_min, y_max = plt.ylim()
+    y_dist = (y_max - y_min) / LABEL_Y_OFFSET_FACTOR
     plot_interval(
         *results.control.std_err(),
         middle=results.control.mean,
+        y=y_dist,
+        offset=-0.015,
         color=CONTROL_COLOR,
         display_text=True,
         label=results.control.name
@@ -459,6 +495,8 @@ def visualize_rates_results(results, figsize=(15, 10), outfile=None, *args, **kw
     plot_interval(
         *results.variation.std_err(),
         middle=results.variation.mean,
+        y=-y_dist,
+        offset=0.005,
         color=VARIATION_COLOR,
         display_text=True,
         label=results.variation.name
@@ -470,12 +508,21 @@ def visualize_rates_results(results, figsize=(15, 10), outfile=None, *args, **kw
     # Differences plot
     plt.sca(axs[2])
 
-    plot_interval(*results.ci[0], middle=results.delta, color=DIFF_COLOR, display_text=True)
+    plot_interval(
+        *results.ci[0],
+        middle=results.delta,
+        color=DIFF_COLOR,
+        display_text=True
+    )
     plt.axvline(1., color=DIFF_COLOR, linestyle='--', linewidth=1.5)
     plt.gca().get_yaxis().set_ticks([])
     plt.title(results.comparison_type)
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(
+            outfile,
+            bbox_inches='tight',
+            dpi=300
+        )
 
 
 def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_type='bar', *args, **kwargs):
@@ -483,9 +530,7 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
 
     # Sample Comparison plot
     plt.sca(axs[0])
-    # control_pmf.plot(plot_type='bar', alpha=.5)
-    # variation_pmf.plot(plot_type='bar', alpha=.5)
-
+    
     if plot_type == 'bar':
         bins = 50 if results.control.nobs >= 100 or results.variation.nobs >= 100 else 20
         results.control.hist(bins=bins, color=CONTROL_COLOR, alpha=.5, label=results.control.name)
@@ -510,9 +555,13 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
 
     # Bootstrapped statistic +/- HDI
     plt.sca(axs[1])
+    y_min, y_max = plt.ylim()
+    y_dist = (y_max - y_min) / LABEL_Y_OFFSET_FACTOR
     plot_interval(
         *results.aux['control'].hdi(),
         middle=results.aux['control'].mean,
+        y=y_dist,
+        offset=-0.015,
         color=CONTROL_COLOR,
         display_text=True,
         label=results.control.name
@@ -520,6 +569,8 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
     plot_interval(
         *results.aux['variation'].hdi(),
         middle=results.aux['variation'].mean,
+        y=-y_dist,
+        offset=0.005,
         color=VARIATION_COLOR,
         display_text=True,
         label=results.variation.name
@@ -531,15 +582,24 @@ def visualize_bootstrap_results(results, figsize=(15, 10), outfile=None, plot_ty
     # Differences plot
     plt.sca(axs[2])
 
-    plot_interval(*results.ci[0], middle=results.delta, color=DIFF_COLOR, display_text=True)
+    plot_interval(
+        *results.ci[0],
+        middle=results.delta,
+        color=DIFF_COLOR,
+        display_text=True
+    )
     plt.axvline(0., color=DIFF_COLOR, linestyle='--', linewidth=1.5)
     plt.gca().get_yaxis().set_ticks([])
     plt.title(f"{results.comparison_type}({results.test_statistic})")
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(
+            outfile,
+            bbox_inches='tight',
+            dpi=300
+        )
 
 def visualize_bayesian_results(results, figsize=RESULTS_FIGSIZE, outfile=None, *args, **kwargs):
-    fig, axs = plt.subplots(2, 1, figsize=figsize)
+    fig, axs = plt.subplots(3, 1, figsize=figsize)
 
     def get_central_tendency_params(results):
         if 'p_control' in results.traces.variables:
@@ -548,28 +608,54 @@ def visualize_bayesian_results(results, figsize=RESULTS_FIGSIZE, outfile=None, *
             return 'mu_control', 'mu_variation', '$\\mu$ (mean)'
         elif 'lambda_control' in results.traces.variables:
             return 'lambda_control', 'lambda_variation', '$\\lambda$ (rate)'
-
+    HDI = 0.95
+    HDI_PRCT = round(HDI * 100)
     plt.sca(axs[0])
     ctps = get_central_tendency_params(results)
     results.traces.plot(
         ctps[0],
         label=results.control.name,
         color=COLORS.blue,
-        hdi=.95,
         alpha=.4
     )
     results.traces.plot(
         ctps[1],
         label=results.variation.name,
         color=COLORS.green,
-        hdi=.95,
         alpha=.4,
         title='Comparison of {}'.format(ctps[2])
     )
     plt.legend()
     lower_y(axs[0])
+    x_min, x_max = plt.xlim()
 
     plt.sca(axs[1])
+    y_min, y_max = plt.ylim()
+    y_dist = (y_max - y_min) / LABEL_Y_OFFSET_FACTOR
+    results.traces.plot(
+        ctps[0],
+        label=results.control.name,
+        color=COLORS.blue,
+        hdi=HDI,
+        include_hist=False,
+        y=y_dist,
+        offset=-0.015
+    )
+
+    results.traces.plot(
+        ctps[1],
+        label=results.variation.name,
+        color=COLORS.green,
+        hdi=HDI,
+        include_hist=False,
+        y=-y_dist,
+        offset=0.005
+    )
+    lower_y(axs[1])
+    plt.xlim([x_min, x_max])
+    plt.title(f"{ctps[2]} +/- {HDI_PRCT}% HDI")
+
+    plt.sca(axs[2])
     results.traces.plot(
         'delta',
         hdi=1 - results.alpha,
@@ -577,10 +663,14 @@ def visualize_bayesian_results(results, figsize=RESULTS_FIGSIZE, outfile=None, *
         color=COLORS.dark_gray,
         title='Differences in {}'.format(ctps[2])
     )
-    lower_y(axs[1])
+    lower_y(axs[2])
 
     if outfile:
-        plt.savefig(outfile)
+        plt.savefig(
+            outfile,
+            bbox_inches='tight',
+            dpi=300
+        )
 
 class Traces(object):
     """
@@ -591,9 +681,6 @@ class Traces(object):
     traces: dict
         Key-value pairs of parameters:samples, extracted from a Bayesian inference
         procedure.
-    burnin: int
-        We ignore the first `burnin` samples to avoid any autocorrelation. This
-        is particularly helpful when samples are produced by MCMC.
     """
 
     def __init__(self, traces):
@@ -622,11 +709,15 @@ class Traces(object):
     def summary(self):
         return self._summary
 
-    def plot(self, variable, label=None,
-             color=None, ref_val=None, alpha=.25,
-             bins=None, title=None,
-             hdi=None, outfile=None,
-             ref_color=None):
+    def plot(
+        self, variable, label=None,
+        color=None, ref_val=None, alpha=.25,
+        bins=None, title=None,
+        hdi=None, outfile=None,
+        include_hist=True,
+        offset=5,
+        y=0.
+    ):
         """
         Plot the histogram of a variable trace
 
@@ -639,36 +730,55 @@ class Traces(object):
         ref_val : float
             A reference value location at which to draw a vertical line
         alpha : float in [0 1)
-            The transparency of the histogram
+            The transparency of the histogram. Ignored if `include_hist=False`
         bins : int
-            The number of histogram bins
+            The number of histogram bins. Ignored if `include_hist=False`
         title : str
             The title of the plot
         hdi : float in [0, 1]
             The amount of probability mass within the Highest Density Interval
             to display on the histogram.
+        y : float
+            The y offset for interval plots. Ignored if `hdi is None`
+        offset : float
+            The text offset for interval plots. Ignored if `hdi is None`
         outfile : str
             The name of an output file to save the figure to.
         """
         from matplotlib import pyplot as plt  # lazy import
         from abra.vis import plot_interval
 
+        if (include_hist is False) and (hdi is None):
+            raise ValueError('include_hist must be True if hdi is None')
+
         if variable not in self.variables:
-            print(self.variables)
             raise ValueError('Variable `{}` not available'.format(variable))
 
         label = label if label else variable
         trace = getattr(self, variable)
-
-        if bins is None:
-            bins = int(len(trace.data) / 50.)
-
-        trace.hist(color=color, alpha=alpha, bins=bins, ref_val=ref_val, label=label)
-
+        
+        if include_hist:
+            if bins is None:
+                bins = int(len(trace.data) / 50.)
+            trace.hist(
+                color=color,
+                alpha=alpha,
+                bins=bins,
+                ref_val=ref_val,
+                label=label
+            )
+        
         if hdi is not None:  # highest density interval
             median = round(trace.percentiles(50), 3)
             _hdi = [round(h, 3) for h in trace.hdi(1 - hdi)]
-            plot_interval(*_hdi, middle=median, display_text=True, color=color, offset=5)
+            plot_interval(
+                *_hdi,
+                middle=median,
+                display_text=True,
+                offset=offset,
+                y=y,
+                color=color
+            )
 
         if title is None:
             if ref_val is not None:
@@ -676,7 +786,11 @@ class Traces(object):
                 title = " {}% < {} = {} < {}%".format(100 - gt, variable, ref_val, gt)
             else:
                 title = ''
-        plt.title(title, fontsize=16)
+        plt.title(title, fontsize=14)
 
         if outfile:
-            plt.savefig(outfile)
+            plt.savefig(
+                outfile,
+                bbox_inches='tight',
+                dpi=300
+            )
