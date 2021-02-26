@@ -1,14 +1,11 @@
 version: 2.1
-# orbs:
-#   codecov: codecov/codecov@1.0.2
-
 jobs:
   build:
     working_directory: ~/abracadabra
     docker:
     - image: circleci/python:3.7.0
       environment:
-        PIPENV_VENV_IN_PROJECT: true
+        PIPENV_VENV_IN_PROJECT: "true"
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -31,18 +28,4 @@ jobs:
       - run:
           name: Run Tests
           command: |
-            pipenv run coverage run -m --omit=abra/vis.py --source=abra pytest --junitxml=test-results/junit.xml --run_stan_tests test
-            pipenv run coverage report
-            pipenv run coverage html
-            pipenv run codecov
-
-      # coverage.py artifacts
-      - store_artifacts:
-          path: htmlcov     # Artifact created by `coverage html`: https://circleci.com/docs/2.0/code-coverage/#python
-
-      # pytest artifacts
-      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: test-results
-      - store_artifacts:    # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: test-results
-          destination: tr1
+            pipenv run pytest --junitxml=test-results/junit.xml --run_stan_tests test
