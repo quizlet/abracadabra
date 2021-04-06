@@ -1,3 +1,7 @@
+## [0.0.7] - 2021-04-06
+### Changed
+- Update notebook dependency to address security vulnerability
+
 ## [0.0.6] - 2021-02-22
 ### Changed
 - Update dependencies
