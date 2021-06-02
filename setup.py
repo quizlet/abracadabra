@@ -87,7 +87,7 @@ setup(
         "tornado==6.1; python_version >= '3.5'",
         "traitlets==5.0.5; python_version >= '3.7'",
         "typing-extensions==3.7.4.3; python_version < '3.8'",
-        "urllib3==1.26.4",
+        "urllib3==1.26.5",
         "wcwidth==0.2.5",
         "webencodings==0.5.1",
         "widgetsnbextension==3.5.1",
