@@ -60,7 +60,7 @@ setup(
         "patsy==0.5.1",
         "pexpect==4.8.0; sys_platform != 'win32'",
         "pickleshare==0.7.5",
-        "pillow==8.2.0",
+        "pillow==9.0.0",
         "pipfile==0.0.2",
         "prettytable==2.1.0",
         "prometheus-client==0.10.0; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
