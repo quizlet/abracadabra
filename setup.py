@@ -31,7 +31,7 @@ setup(
         "entrypoints==0.3; python_version >= '2.7'",
         "importlib-metadata==3.10.0; python_version < '3.8'",
         "ipykernel==5.5.3; python_version >= '3.5'",
-        "ipython==7.22.0; python_version >= '3.3'",
+        "ipython==7.31.1; python_version >= '3.3'",
         "ipython-genutils==0.2.0",
         "ipywidgets==7.6.3",
         "jedi==0.18.0; python_version >= '3.6'",
