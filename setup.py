@@ -67,7 +67,7 @@ setup(
         "prompt-toolkit==3.0.18; python_full_version >= '3.6.1'",
         "ptyprocess==0.7.0; os_name != 'nt'",
         "pycparser==2.20; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-        "pygments==2.8.1; python_version >= '3.5'",
+        "pygments==2.15.0; python_version >= '3.5'",
         "pyparsing==2.4.7; python_version >= '2.6' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "pyrsistent==0.17.3; python_version >= '3.5'",
         "pystan==2.19.1.1",
