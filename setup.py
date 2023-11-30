@@ -51,7 +51,7 @@ setup(
         "nbconvert==6.0.7; python_version >= '3.6'",
         "nbformat==5.1.3; python_version >= '3.5'",
         "nest-asyncio==1.5.1; python_version >= '3.5'",
-        "notebook==6.3.0",
+        "notebook==6.4.12",
         "numpy==1.20.2",
         "packaging==20.9; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "pandas==1.1.5",
