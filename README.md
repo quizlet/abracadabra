@@ -1,4 +1,9 @@
 # ✨ABracadabra✨
+
+# ⚠️ ABracadabra is no longer being actively developed ⚠️
+
+If you would still like to perform refreshingly simple hypothesis test analyses in python, please refer to [spearmint](https://github.com/dustinstansbury/spearmint), a modern fork of `abracadabra` that is maintained by `abracadabra`'s original developer.
+
 ![MIT License](https://img.shields.io/github/license/quizlet/abracadabra)
 [![quizlet](https://circleci.com/gh/quizlet/abracadabra.svg?style=shield)](https://circleci.com/gh/quizlet/abracadabra)
 ![Coverage](https://codecov.io/gh/quizlet/abracadabra/branch/master/graph/badge.svg)
