@@ -46,7 +46,7 @@ setup(
         "kiwisolver==1.3.1; python_version >= '3.6'",
         "markupsafe==1.1.1; python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
         "matplotlib==3.4.1",
-        "mistune==0.8.4",
+        "mistune==2.0.3",
         "nbclient==0.5.3; python_full_version >= '3.6.1'",
         "nbconvert==6.0.7; python_version >= '3.6'",
         "nbformat==5.1.3; python_version >= '3.5'",
